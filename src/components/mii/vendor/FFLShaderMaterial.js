@@ -1,4 +1,5 @@
 // @ts-nocheck
+// From FFL.js (https://github.com/ariankordi/FFL.js) by Arian Kordi. License: AGPL-3.0-only.
 
 import * as THREE from 'three';
 

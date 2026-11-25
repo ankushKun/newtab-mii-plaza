@@ -4,10 +4,19 @@ export default defineConfig({
   srcDir: 'src',
   // Manifest V3 in both browsers: one manifest shape, one content security policy.
   manifestVersion: 3,
+  // Ship the license and third-party notices inside every package (AGPL, MIT, Apache and BSD all ask for it).
+  hooks: {
+    'build:publicAssets': (wxt, files) => {
+      for (const name of ['LICENSE', 'THIRD_PARTY_NOTICES.md']) {
+        files.push({ absoluteSrc: `${wxt.config.root}/${name}`, relativeDest: name });
+      }
+    },
+  },
   manifest: ({ browser }) => ({
     name: 'New Tab Mii Plaza',
     short_name: 'Mii Plaza',
     description: 'Your sites in glass blocks over a busy plaza, on every new tab.',
+    homepage_url: 'https://github.com/ankushKun/new-tab-mii-plaza',
     action: {
       default_title: 'Open New Tab Mii Plaza',
     },

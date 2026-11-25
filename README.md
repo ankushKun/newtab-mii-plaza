@@ -40,6 +40,10 @@ A new tab stays fast without holding back the live scene:
 - **Idle pause.** After five minutes without input it stops drawing, and any input starts it again.
 - **Hidden tabs let go.** A tab hidden for three minutes frees its WebGL context and memory, and reloads when shown again. Chrome runs all of an extension's pages in one process with a limit of 16 WebGL contexts, so this also keeps many open new tabs from running out.
 
+## License
+
+[AGPL-3.0-only](./LICENSE), because the bundled [FFL.js](https://github.com/ariankordi/FFL.js) is AGPL-3.0-only. Other bundled code, the font and the Nintendo files that are not covered by this license are listed in [THIRD_PARTY_NOTICES.md](./THIRD_PARTY_NOTICES.md). Both files ship inside every build. Mii, Wii U and Nintendo 3DS are trademarks of Nintendo, and this project is not affiliated with Nintendo.
+
 ## Before publishing
 
 See [STORE_LISTING.md](./STORE_LISTING.md) and [PRIVACY.md](./PRIVACY.md) for Chrome Web Store and Firefox Add-ons submission copy, AMO source-archive steps, and asset considerations for `public/ffl/FFLResHigh.dat` and the body models.

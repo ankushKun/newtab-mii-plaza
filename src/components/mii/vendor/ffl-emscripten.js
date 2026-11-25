@@ -1,5 +1,6 @@
 // @ts-nocheck
 // FFL compiled to WebAssembly (Emscripten). Vendored from github.com/ankushKun/mii-creator.
+// Emscripten runtime: MIT, Emscripten authors. See THIRD_PARTY_NOTICES.md.
 var ModuleFFL = (() => {
   var _scriptName = typeof document != 'undefined' ? document.currentScript?.src : undefined;
   

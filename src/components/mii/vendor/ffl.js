@@ -4,6 +4,7 @@
  * Bindings for FFL, a Mii renderer, in JavaScript.
  * https://github.com/ariankordi/FFL.js
  * @author Arian Kordi <https://github.com/ariankordi>
+ * @license AGPL-3.0-only
  */
 
 // ------------------ ESM imports, uncomment if you use ESM ------------------
