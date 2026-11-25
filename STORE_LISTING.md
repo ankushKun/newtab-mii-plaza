@@ -25,28 +25,9 @@ pnpm zip:sources    # Store zips + source archives (needed for AMO review)
 
 ---
 
-## 3. Firefox Add-ons (AMO) Submission Notes
+## 3. Firefox Add-ons (AMO)
 
-Because WXT/Vite outputs minified JavaScript bundles (`.output/firefox-mv3/chunks/*.js`) and includes Emscripten WebAssembly glue, AMO requires submitting the **source code zip** produced by `pnpm zip:sources`.
-
-### Reviewer Build Notes (paste into AMO "Notes to Reviewer")
-
-```text
-This extension is built with WXT (Vite + TypeScript).
-
-Build environment:
-- Node.js 20+ and pnpm 9+
-
-Build steps from the uploaded source archive:
-1. pnpm install --frozen-lockfile
-2. pnpm build
-3. Output directory: .output/firefox-mv3
-
-Notes on vendored files and WebAssembly:
-- public/ffl/ffl.wasm and src/components/mii/vendor/ffl-emscripten.js are the compiled FFL WebAssembly library (Emscripten build from github.com/ankushKun/mii-creator), executed locally under CSP "wasm-unsafe-eval".
-- src/components/mii/vendor/ffl.js and FFLShaderMaterial.js are from github.com/ariankordi/FFL.js (AGPL-3.0-only), and struct-fu.js is from github.com/natevw/struct-fu (BSD-2-Clause). LICENSE and THIRD_PARTY_NOTICES.md list every third-party component.
-- No remote code is executed. Network requests occur only when pinning a site to fetch its page title, theme color, and favicon directly with `credentials: 'omit'` and cache them locally, and at most every six hours to read https://ankush.one/announcement.json, plain JSON whose text is shown with textContent.
-```
+[`store/amo.md`](./store/amo.md): which files to upload, notes for the reviewer with the exact build steps, and the listing fields.
 
 ---
 

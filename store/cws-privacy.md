@@ -34,9 +34,9 @@ No. Everything runs from the package; `'wasm-unsafe-eval'` only lets the bundled
 
 ## Data usage
 
-Tick **Website content**: the title, colour and icon of the sites the user pins are read and stored on the device. Nothing else is collected.
+Tick none of the data types. Nothing about the user reaches the developer or anyone else: pins and settings sync through the user's own browser account, pinned sites' titles and icons are fetched from those sites and kept on the device, and the announcement request carries no cookies or data. If a reviewer asks for one anyway, Website content (the pinned sites' titles and icons) is the closest fit.
 
-Then certify all three:
+Certify all three:
 
 - Not sold or transferred to third parties
 - Not used for purposes unrelated to the single purpose
