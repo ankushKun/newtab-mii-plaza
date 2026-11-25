@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light dark" />
+    <title>New Tab</title>
+  </head>
+  <body>
+    <main class="plaza" data-state="loading">
+      <canvas aria-hidden="true"></canvas>
+      <nav class="plaza-links" aria-label="Pinned sites"></nav>
+      <div class="plaza-bubbles" aria-hidden="true"></div>
+      <svg class="plaza-defs" aria-hidden="true">
+        <defs>
+          <filter id="plaza-bubble-shadow" x="-30%" y="-40%" width="160%" height="200%" color-interpolation-filters="sRGB">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="5.5" result="blur"></feGaussianBlur>
+            <feOffset in="blur" dx="0" dy="3" result="offset"></feOffset>
+            <feComposite in="offset" in2="SourceAlpha" operator="out"></feComposite>
+          </filter>
+        </defs>
+      </svg>
+      <div class="plaza-who" aria-hidden="true"></div>
+      <div class="plaza-clock" hidden aria-live="off">
+        <time class="plaza-time"></time>
+        <span class="plaza-date"></span>
+      </div>
+      <button type="button" class="hud-manage" title="Settings and blocks (?)" aria-label="Settings and blocks">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path
+            d="M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+          <path
+            d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 1 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1Z"
+            stroke="currentColor"
+            stroke-width="1.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </button>
+      <div class="plaza-toast" role="status" aria-live="polite" hidden></div>
+    </main>
+
+    <dialog class="editor" aria-labelledby="editor-heading">
+      <form method="dialog" novalidate>
+        <div class="editor-hero">
+          <div class="editor-tile-wrap">
+            <button
+              type="button"
+              class="editor-tile-btn"
+              title="Choose custom image (PNG, JPG, GIF)"
+              aria-label="Choose custom image for this block"
+            >
+              <canvas class="editor-preview" width="192" height="192" aria-hidden="true"></canvas>
+              <img class="editor-preview-gif" alt="" hidden />
+              <span class="editor-tile-sheen" aria-hidden="true"></span>
+              <span class="editor-tile-edit" aria-hidden="true">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none">
+                  <path
+                    d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"
+                    stroke="currentColor"
+                    stroke-width="2.1"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                  />
+                </svg>
+              </span>
+            </button>
+            <button type="button" class="editor-tile-reset" hidden>Use site icon</button>
+            <input class="editor-file" type="file" accept="image/*" hidden />
+          </div>
+          <h2 id="editor-heading" class="editor-title" title="Double-click to rename">Add site</h2>
+          <input
+            type="text"
+            class="editor-title-input"
+            name="title"
+            aria-label="Shortcut title"
+            maxlength="48"
+            autocomplete="off"
+            hidden
+          />
+        </div>
+
+        <input
+          name="url"
+          placeholder="Enter a site or URL (e.g. github.com)"
+          aria-label="Website address"
+          autocomplete="off"
+          spellcheck="false"
+          inputmode="url"
+        />
+        <p class="editor-error" role="alert" hidden></p>
+
+        <details class="editor-advanced">
+          <summary>Advanced</summary>
+          <p class="editor-advanced-empty">No extra options yet.</p>
+        </details>
+
+        <div class="editor-actions">
+          <button type="button" class="editor-remove">Remove</button>
+          <button type="button" class="editor-cancel">Cancel</button>
+          <button type="submit" class="editor-save">Save</button>
+        </div>
+      </form>
+    </dialog>
+
+    <dialog class="sheet" aria-labelledby="sheet-heading">
+      <div class="sheet-body">
+        <div class="sheet-head">
+          <h2 id="sheet-heading" class="sheet-title">Settings</h2>
+          <button type="button" class="sheet-close">Done</button>
+        </div>
+        <div class="sheet-content"></div>
+      </div>
+    </dialog>
+
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
