@@ -105,7 +105,7 @@
     <header class="site-head">
       <a class="brand" href="#top">New Tab Mii Plaza</a>
       <nav class="head-links" aria-label="Primary">
-        <a href="#install">Install</a>
+        <a href="#install" data-install-link>Install</a>
         <a href="#faq">FAQ</a>
         <a href="https://discord.gg/2zzuECtPV3" target="_blank" rel="noopener noreferrer" aria-label="Discord">
           <span class="mark mark-discord" aria-hidden="true"><svg class="icon"><use href="#i-discord" /></svg></span>
@@ -131,7 +131,7 @@
             href="https://github.com/ankushKun/newtab-mii-plaza/releases/latest/download/newtab-mii-plaza-chrome.zip"
           >
             <svg class="bi" aria-hidden="true"><use href="#bi-chrome" /></svg>
-            <span>Download for <span data-name>Chrome</span></span>
+            <span><span data-verb>Download for</span> <span data-name>Chrome</span></span>
           </a>
           <a
             class="btn"
@@ -139,9 +139,10 @@
             href="https://github.com/ankushKun/newtab-mii-plaza/releases/latest/download/newtab-mii-plaza-firefox.zip"
           >
             <svg class="bi" aria-hidden="true"><use href="#bi-firefox" /></svg>
-            <span>Download for Firefox</span>
+            <span><span data-verb>Download for</span> <span data-name>Firefox</span></span>
           </a>
         </div>
+        <p class="stores" data-stores hidden></p>
       </section>
 
       <figure class="shot-wrap">
@@ -277,6 +278,7 @@
       </p>
     </footer>
 
+    <!-- stores -->
     <script>
       const stage = document.querySelector('[data-shot-stage]');
       const themeButtons = document.querySelectorAll('[data-shot-theme]');
@@ -327,6 +329,60 @@
             if (nameEl) nameEl.textContent = browser.name;
           }
         }
+      }
+
+      // Where each store stands (scripts/site.mjs asks both at build time; Firefox is asked again here, since its
+      // API answers web pages). A live store gets the button; until then the button downloads the release zip and
+      // the line under the buttons says it's coming. Install steps only show for stores that aren't live yet.
+      let stores = null;
+      try {
+        stores = JSON.parse(document.getElementById('stores')?.textContent ?? 'null');
+      } catch {}
+
+      function showStores() {
+        if (!stores) return;
+        const line = document.querySelector('[data-stores]');
+        line.replaceChildren();
+        for (const [build, store] of Object.entries(stores)) {
+          const button = document.querySelector(`[data-get="${build}"]`);
+          if (store.live) {
+            button.dataset.zip ??= button.href;
+            button.href = store.url;
+            button.querySelector('[data-verb]').textContent = 'Add to';
+          } else if (button.dataset.zip) {
+            button.href = button.dataset.zip;
+            button.querySelector('[data-verb]').textContent = 'Download for';
+          }
+          document.querySelector(`[data-steps="${build}"]`).hidden = store.live === true;
+          if (store.live === null) continue;
+          const item = document.createElement(store.live ? 'a' : 'span');
+          item.className = 'store';
+          item.dataset.state = store.live ? 'live' : 'soon';
+          if (store.live) item.href = store.url;
+          item.textContent = `${store.name}: `;
+          const state = document.createElement('b');
+          state.textContent = store.live ? (store.version ? `live, v${store.version}` : 'live') : 'coming soon';
+          item.append(state);
+          line.append(item);
+        }
+        line.hidden = !line.childElementCount;
+        const anyZip = Object.values(stores).some((store) => store.live !== true);
+        document.getElementById('install').hidden = !anyZip;
+        document.querySelector('[data-install-link]').hidden = !anyZip;
+      }
+      showStores();
+
+      if (stores?.firefox && !stores.firefox.live) {
+        fetch('https://addons.mozilla.org/api/v5/addons/addon/newtab-mii-plaza/')
+          .then(async (res) => {
+            if (res.status === 401 || res.status === 404) return;
+            const data = await res.json();
+            if (data.status === 'public' && !data.is_disabled) {
+              stores.firefox = { ...stores.firefox, live: true, version: data.current_version?.version };
+              showStores();
+            }
+          })
+          .catch(() => {});
       }
     </script>
   </body>

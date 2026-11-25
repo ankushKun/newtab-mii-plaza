@@ -1,5 +1,6 @@
 # Builds the project page (site/ and PRIVACY.md, scripts/site.mjs) and deploys it to GitHub Pages,
-# served at https://ankush.one/newtab-mii-plaza/ through the user site's custom domain.
+# served at https://ankush.one/newtab-mii-plaza/ through the user site's custom domain. It also runs on a schedule to
+# pick up store approvals, with nothing but the workflow's own token.
 name: Pages
 
 on:
@@ -12,6 +13,9 @@ on:
       - public/icon/**
       - .github/workflows/pages.yml
   workflow_dispatch:
+  # Rebuilds every three hours so the page notices when a store approves the extension (scripts/site.mjs).
+  schedule:
+    - cron: '23 */3 * * *'
 
 permissions:
   contents: read
