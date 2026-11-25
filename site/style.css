@@ -13,6 +13,7 @@
   --sky: #4fbfee;
   --sky-deep: #2aa6dc;
   --shadow: 0 30px 70px -30px rgb(20 50 70 / 0.45);
+  --spring: cubic-bezier(0.3, 1.45, 0.5, 1);
   --font: ui-rounded, 'SF Pro Rounded', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
@@ -195,6 +196,266 @@ h3 {
   color: var(--ink);
 }
 
+.icon {
+  width: 18px;
+  height: 18px;
+  flex: none;
+  fill: currentColor;
+}
+
+/* The GitHub link: a pill in GitHub's own near-black, in the top right corner; just the mark on a phone. */
+.gh-link {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px 7px 11px;
+  border: 1px solid #1b1f24;
+  border-radius: 99px;
+  background: linear-gradient(#3b434b, #24292f);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 2px 0 #11151a;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform 0.12s ease;
+}
+
+.gh-link:hover {
+  transform: translateY(-1px);
+  background: linear-gradient(#454e57, #2c3238);
+}
+
+.gh-link:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.18),
+    0 0 0 #11151a;
+}
+
+.gh-link:focus-visible,
+.fund:focus-visible,
+.funds-tab:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 2px;
+}
+
+.gh-link .icon {
+  width: 17px;
+  height: 17px;
+}
+
+/* Support: GitHub Sponsors, Buy Me a Coffee and Ko-fi (.github/FUNDING.yml), pinned to the left edge. Where the
+   margin beside the page is too narrow for them they wait behind a Support tab that slides them out. */
+.funds {
+  position: fixed;
+  top: 96px;
+  left: 0;
+  z-index: 3;
+  transform: translateX(calc(-100% + 34px));
+  transition: transform 0.42s var(--spring);
+  filter: drop-shadow(0 10px 18px rgb(20 50 70 / 0.2));
+}
+
+/* Hover only where there is a pointer, and focus only from the keyboard, so a tap on the tab can close it again. */
+.funds.is-open,
+.funds:has(:focus-visible) {
+  transform: none;
+}
+
+@media (hover: hover) {
+  .funds:hover {
+    transform: none;
+  }
+}
+
+.funds-card {
+  display: flex;
+  align-items: stretch;
+  overflow: hidden;
+  border-radius: 0 19px 19px 0;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.funds-list {
+  display: grid;
+  gap: 12px;
+  padding: 14px 14px 18px;
+}
+
+.funds-tab {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 34px;
+  padding: 14px 0;
+  border: 0;
+  background: #e2449f;
+  box-shadow:
+    inset 3px 0 0 rgb(0 0 0 / 0.12),
+    inset -2px 0 0 rgb(255 255 255 / 0.35);
+  color: #fff;
+  font: 700 13px/1 var(--font);
+  letter-spacing: 0.06em;
+  writing-mode: vertical-rl;
+  cursor: pointer;
+}
+
+.funds-tab .icon {
+  width: 15px;
+  height: 15px;
+}
+
+/* A pill: the page's glossy button in its platform's colours. */
+.fund {
+  --hi: #fff;
+  --mid: #ddd;
+  --lo: #ccc;
+  --ledge: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  padding: 10px 20px 11px 16px;
+  border: 1px solid var(--ledge);
+  border-radius: 99px;
+  background: linear-gradient(var(--hi) 0%, var(--mid) 48%, var(--lo) 52%, color-mix(in srgb, var(--lo) 88%, #000) 100%);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 4px 0 var(--ledge),
+    0 8px 16px color-mix(in srgb, var(--mid) 30%, transparent);
+  color: #fff;
+  font-size: 15px;
+  font-weight: 800;
+  line-height: 1.1;
+  text-decoration: none;
+  white-space: nowrap;
+  text-shadow: 0 1px 1px rgb(0 0 0 / 0.3);
+  transition:
+    transform 0.26s var(--spring),
+    box-shadow 0.12s ease;
+}
+
+.fund .icon {
+  width: 20px;
+  height: 20px;
+  filter: drop-shadow(0 1px 1px rgb(0 0 0 / 0.25));
+}
+
+.fund:hover {
+  transform: translateY(-2px);
+}
+
+.fund:active {
+  transform: translateY(4px);
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.7),
+    0 0 0 var(--ledge),
+    0 2px 6px color-mix(in srgb, var(--mid) 30%, transparent);
+  transition-duration: 0.12s;
+}
+
+.fund-gh {
+  --hi: #f6acd6;
+  --mid: #e2449f;
+  --lo: #d0338c;
+  --ledge: #9c2268;
+}
+
+.fund-kofi {
+  --hi: #ffb5b3;
+  --mid: #ff5e5b;
+  --lo: #f0433f;
+  --ledge: #b02b28;
+}
+
+.fund-bmc {
+  --hi: #fff4a6;
+  --mid: #ffdd00;
+  --lo: #f4cb00;
+  --ledge: #b28f00;
+  color: #0d0c22;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 0.45);
+}
+
+.fund-bmc .icon {
+  filter: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .fund-gh:hover .icon,
+  .funds-tab:hover .icon {
+    animation: heartbeat 1s ease-out infinite;
+  }
+}
+
+@keyframes heartbeat {
+  0%,
+  30%,
+  60%,
+  100% {
+    scale: 1;
+  }
+  15% {
+    scale: 1.28;
+  }
+  45% {
+    scale: 1.16;
+  }
+}
+
+/* Where the margin beside the page fits them, the pills stand there in view, with no tab. */
+@media (min-width: 1500px) {
+  .funds,
+  .funds:hover {
+    left: 20px;
+    transform: none;
+    filter: none;
+  }
+
+  .funds-card {
+    overflow: visible;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .funds-tab {
+    display: none;
+  }
+
+  .funds-list {
+    gap: 10px;
+    padding: 0;
+  }
+
+  .fund {
+    justify-content: flex-start;
+    gap: 8px;
+    padding: 9px 16px 10px 12px;
+    font-size: 14px;
+  }
+
+  .fund .icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .funds,
+  .fund {
+    transition: none;
+  }
+}
+
 /* The privacy policy, rendered from PRIVACY.md. */
 .prose {
   width: min(720px, 100% - 32px);
@@ -239,6 +500,16 @@ h3 {
 
   .btn {
     justify-content: center;
+  }
+
+  .gh-link {
+    top: 14px;
+    right: 14px;
+    padding: 7px;
+  }
+
+  .gh-label {
+    display: none;
   }
 
   .shot img {
