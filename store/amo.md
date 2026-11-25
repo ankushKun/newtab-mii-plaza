@@ -14,11 +14,11 @@ What to fill in at https://addons.mozilla.org/developers/addon/submit/. The desc
 ```text
 Built with WXT (Vite + TypeScript). No login or setup is needed to test: open a new tab. Press ? or the gear in the bottom right corner for Settings.
 
-Build from the source archive:
-- Node.js 24 and pnpm 12.15.0
-- pnpm install --frozen-lockfile
-- pnpm build
-- Output: .output/firefox-mv3 (identical to the uploaded file)
+Build from the source archive (the uploaded file is built the same way by GitHub Actions on Ubuntu):
+1. Install Node.js 24, then pnpm 12.15.0: npm install -g pnpm@12.15.0
+2. Unzip the source archive and run, inside it: pnpm install --frozen-lockfile
+3. pnpm build
+4. The add-on is in .output/firefox-mv3, identical to the uploaded file.
 
 Third-party and binary files:
 - public/ffl/ffl.wasm and src/components/mii/vendor/ffl-emscripten.js are FFL, the Mii face renderer, compiled with Emscripten. It runs locally under the extension's CSP ('wasm-unsafe-eval' only, for this module).
