@@ -44,7 +44,7 @@ Network:
 - **Description:** the same text as Chrome, in [listing.md](./listing.md).
 - **Categories** (up to three): Appearance, Tabs and Bookmarks.
 - **Tags:** dark mode. None of the others describe it.
-- **Contributions URL:** https://github.com/sponsors/ankushKun
+- **Contributions URL:** https://ko-fi.com/ankushkun
 - **Support email:** miiplaza@ankush.one
 - **Support website:** https://ankush.one/newtab-mii-plaza/support/
 - **Homepage:** https://ankush.one/newtab-mii-plaza/
@@ -52,3 +52,17 @@ Network:
 - **Privacy policy:** AMO takes the text, not a link. Paste the contents of `PRIVACY.md`.
 - **Screenshots:** the four in `screenshots/`. AMO takes them at 1280x800 as they are.
 - **Icon:** taken from the extension, nothing to upload.
+
+## Technical details
+
+**Developer comments** (public, shown on the listing):
+
+```markdown
+The first time you open a new tab after installing, Firefox asks whether to keep the extension's new tab page. Keep it, or the plaza won't show.
+
+To add your own Miis, open Settings (the gear in the bottom right corner, or press ?), go to Miis and drop in pictures of Mii QR codes from a 3DS or Wii U.
+
+Found a bug? Report it on [GitHub](https://github.com/ankushKun/newtab-mii-plaza/issues) or email miiplaza@ankush.one.
+```
+
+**Whiteboard** (only reviewers see it, and it carries over to every version): paste the notes to reviewer above, so each new version's reviewer has the build steps without you pasting them again.
