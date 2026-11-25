@@ -46,7 +46,7 @@ Network:
 - **Support email:** miiplaza@ankush.one
 - **Support website:** https://ankush.one/newtab-mii-plaza/support/
 - **Homepage:** https://ankush.one/newtab-mii-plaza/
-- **License:** GNU Affero General Public License v3.0. If it isn't in the list, choose a custom license and paste `LICENSE`.
+- **License:** GNU Affero General Public License v3.0 only.
 - **Privacy policy:** AMO takes the text, not a link. Paste the contents of `PRIVACY.md`.
 - **Screenshots:** the four in `screenshots/`. AMO takes them at 1280x800 as they are.
 - **Icon:** taken from the extension, nothing to upload.
