@@ -43,6 +43,8 @@ Network:
 
 - **Description:** the same text as Chrome, in [listing.md](./listing.md).
 - **Categories** (up to three): Appearance, Tabs and Bookmarks.
+- **Tags:** dark mode. None of the others describe it.
+- **Contributions URL:** https://github.com/sponsors/ankushKun
 - **Support email:** miiplaza@ankush.one
 - **Support website:** https://ankush.one/newtab-mii-plaza/support/
 - **Homepage:** https://ankush.one/newtab-mii-plaza/
