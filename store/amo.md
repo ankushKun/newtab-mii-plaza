@@ -42,7 +42,7 @@ Network:
   ```
 
 - **Description:** the same text as Chrome, in [listing.md](./listing.md).
-- **Categories:** Appearance, and Tabs if it lets you pick a second.
+- **Categories** (up to three): Appearance, Tabs and Bookmarks.
 - **Support email:** miiplaza@ankush.one
 - **Support website:** https://ankush.one/newtab-mii-plaza/support/
 - **Homepage:** https://ankush.one/newtab-mii-plaza/
