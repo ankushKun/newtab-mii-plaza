@@ -30,4 +30,4 @@ New Tab Mii Plaza does not collect, transmit, sell, or share personal informatio
 
 ## Contact
 
-If you have questions about this privacy policy, contact the developer through the support link listed on the extension's store page.
+If you have questions about this privacy policy, email [miiplaza@ankush.one](mailto:miiplaza@ankush.one).

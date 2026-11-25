@@ -32,4 +32,5 @@
 
 - Source: https://github.com/ankushKun/newtab-mii-plaza
 - Releases: https://github.com/ankushKun/newtab-mii-plaza/releases
+- Support email: miiplaza@ankush.one
 - Author: https://ankush.one/
