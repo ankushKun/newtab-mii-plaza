@@ -10,6 +10,7 @@ pnpm check         # type check
 pnpm build         # .output/chrome-mv3 and .output/firefox-mv3
 pnpm zip           # store uploads for both
 pnpm zip:sources   # store uploads + source archives for AMO review
+pnpm site          # the project page into .site/
 ```
 
 To try a build by hand, load `.output/chrome-mv3` with Load unpacked on `chrome://extensions` (Developer mode on), or `.output/firefox-mv3/manifest.json` with Load Temporary Add-on on `about:debugging#/runtime/this-firefox`.
@@ -40,6 +41,14 @@ A new tab stays fast without holding back the live scene:
 - **The display's own pace**, on the low-power GPU, with the resolution governor stepping down if frames run slower than the display.
 - **Idle pause.** After five minutes without input it stops drawing, and any input starts it again.
 - **Hidden tabs let go.** A tab hidden for three minutes frees its WebGL context and memory, and reloads when shown again. Chrome runs all of an extension's pages in one process with a limit of 16 WebGL contexts, so this also keeps many open new tabs from running out.
+
+## Releases
+
+A release is a version tag. `npm version patch` (or `minor`, `major`) bumps `package.json`, commits and tags `v1.0.1`, and `git push --follow-tags` sends both. The tag starts `.github/workflows/release.yml`, which checks that the tag matches `package.json`, type checks, runs `pnpm zip:sources` and publishes a GitHub release with the Chrome zip, the Firefox zip and the source archive for AMO, plus copies named without the version so `releases/latest/download/newtab-mii-plaza-chrome.zip` always gets the newest. Store uploads take the versioned zips from the release.
+
+## Project page
+
+`site/` is the page at [ankush.one/newtab-mii-plaza](https://ankush.one/newtab-mii-plaza/): what it is, a screenshot in light and dark, download buttons for the latest release and how to load one. `/privacy/` is `PRIVACY.md` rendered into `site/privacy.html`, so the link the stores show always matches this repo. `pnpm site` builds it into `.site/`, and `.github/workflows/pages.yml` deploys it whenever `site/`, `PRIVACY.md` or the icon change on `main`. It is served under ankush.one because GitHub Pages puts project sites under the user site's custom domain. Once the store listings are live, point the two download buttons in `site/index.html` at them and drop the install steps.
 
 ## License
 

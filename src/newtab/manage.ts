@@ -513,7 +513,7 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
     const portraitUrl = ctx.renderMiiPortrait(DEFAULT_MY_MII.code, DEFAULT_MY_MII.leftEye);
     const linkItems: { label: string; href: string; bg: string; img?: string; svgPath?: string }[] = [
       { label: 'ankush.one', href: 'https://ankush.one/', bg: '#d21e14', img: portraitUrl ?? undefined, svgPath: GLOBE_PATH },
-      { label: 'GitHub', href: 'https://github.com/ankushKun/new-tab-mii-plaza', bg: '#181717', svgPath: GITHUB_PATH },
+      { label: 'GitHub', href: 'https://github.com/ankushKun/newtab-mii-plaza', bg: '#181717', svgPath: GITHUB_PATH },
       { label: 'Twitter', href: 'https://x.com/ankushKun_', bg: '#000000', svgPath: X_PATH },
       { label: DISCORD_LINK.label, href: DISCORD_LINK.href, bg: DISCORD_LINK.bg, svgPath: DISCORD_LINK.svgPath },
     ];

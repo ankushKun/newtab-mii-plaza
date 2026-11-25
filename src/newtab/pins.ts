@@ -44,7 +44,7 @@ export const DEFAULT_PINS: Pins = [
   null,
   null,
   null,
-  { url: 'https://github.com/ankushKun/new-tab-mii-plaza', title: 'GitHub' },
+  { url: 'https://github.com/ankushKun/newtab-mii-plaza', title: 'GitHub' },
   { url: 'https://ankush.one/', title: 'Ankush Kun' },
   { url: 'https://construct.computer/', title: 'Construct Computer' },
   { url: 'https://x.com/ankushKun_', title: 'X' },

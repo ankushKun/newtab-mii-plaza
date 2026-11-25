@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-New Tab Mii Plaza is licensed under the GNU Affero General Public License v3.0 only (see `LICENSE`). Its source code is available at https://github.com/ankushKun/new-tab-mii-plaza.
+New Tab Mii Plaza is licensed under the GNU Affero General Public License v3.0 only (see `LICENSE`). Its source code is available at https://github.com/ankushKun/newtab-mii-plaza.
 
 It includes the following third-party software and assets.
 

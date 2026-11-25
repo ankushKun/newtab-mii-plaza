@@ -48,7 +48,8 @@ pnpm zip:sources    # Store zips + source archives (needed for AMO review)
   - `host_permissions` (`http://*/*`, `https://*/*`): Automatically fetches a pinned site's page title, `theme-color`, and highest-resolution favicon directly from the target URL when added, without prompting or contacting external third-party icon proxies. Cached locally in `storage.local` and pruned when unpinned. Also reads the developer's public announcement file (`https://ankush.one/announcement.json`) at most every six hours, without cookies or identifiers.
   - `chrome_url_overrides.newtab`: Replaces the New Tab page with the New Tab Mii Plaza interface.
 - **Remote Code:** `No, I am not using remote code` (Three.js, WebAssembly, and shaders are bundled inside the extension package; `'wasm-unsafe-eval'` only enables local WebAssembly execution).
-- **Privacy Policy URL:** Host `PRIVACY.md` at a public URL (for example on GitHub Pages or your personal domain) and link it in the Developer Dashboard (and optionally as `homepage_url` in `wxt.config.ts`).
+- **Privacy Policy URL:** `https://ankush.one/newtab-mii-plaza/privacy/`, built from `PRIVACY.md` by the Pages workflow.
+- **Homepage URL:** `https://ankush.one/newtab-mii-plaza/`
 - **Required Store Graphics:**
   - Extension icon: 128x128 PNG (`public/icon/128.png`)
   - Screenshots: 1280x800 PNG/JPEG (recommended 4 shots: populated light mode, populated dark mode, pin editor modal, manage/reorder sheet)
@@ -85,7 +86,8 @@ Notes on vendored files and WebAssembly:
 
 - [ ] Pick **GNU Affero General Public License v3.0** as the license on AMO, and keep the GitHub repo public with each released version tagged. The AGPL requires that anyone who gets the extension can get its source. `homepage_url` and the GitHub link in Settings point there.
 - [ ] Review third-party binary assets in `public/ffl/` (`FFLResHigh.dat`, `body-m.glb`, `body-f.glb`) against store IP policies before publishing publicly.
-- [ ] Publish `PRIVACY.md` at a live URL and paste that URL into both CWS and AMO listings.
+- [ ] Paste `https://ankush.one/newtab-mii-plaza/privacy/` into both CWS and AMO listings.
+- [ ] Upload the versioned zips from the GitHub release for the tag (`-chrome.zip` to CWS; `-firefox.zip` and `-sources.zip` to AMO).
 - [ ] Capture clean `1280x800` screenshots in light and dark mode.
 - [ ] Load `.output/chrome-mv3` in Chrome (`chrome://extensions`) and measure live boot time, heap, and FPS in DevTools per `AGENTS.md`.
 - [ ] Load `.output/firefox-mv3/manifest.json` in Firefox (`about:debugging#/runtime/this-firefox`) and test:

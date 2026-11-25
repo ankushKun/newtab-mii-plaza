@@ -1,0 +1,248 @@
+/* The project page and privacy policy, served at ankush.one/newtab-mii-plaza/ (scripts/site.mjs). Colors follow the
+   extension's own (src/entrypoints/newtab/style.css). */
+
+:root {
+  color-scheme: light dark;
+  --bg: #eef4f6;
+  --ink: #3a3f42;
+  --strong: #1f2427;
+  --muted: rgb(58 63 66 / 0.66);
+  --card: rgb(255 255 255 / 0.9);
+  --line: rgb(60 85 95 / 0.14);
+  --soft: rgb(60 85 95 / 0.08);
+  --sky: #4fbfee;
+  --sky-deep: #2aa6dc;
+  --shadow: 0 30px 70px -30px rgb(20 50 70 / 0.45);
+  --font: ui-rounded, 'SF Pro Rounded', system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #15191c;
+    --ink: #e3eaed;
+    --strong: #f4f8fa;
+    --muted: rgb(227 234 237 / 0.62);
+    --card: rgb(34 40 44 / 0.9);
+    --line: rgb(255 255 255 / 0.1);
+    --soft: rgb(255 255 255 / 0.07);
+    --shadow: 0 30px 70px -30px rgb(0 0 0 / 0.8);
+  }
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: radial-gradient(ellipse 90% 60% at 50% 0%, color-mix(in srgb, var(--sky) 14%, transparent), transparent 70%), var(--bg);
+  color: var(--ink);
+  font-family: var(--font);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--sky-deep);
+}
+
+code {
+  padding: 1px 6px;
+  border-radius: 6px;
+  background: var(--soft);
+  font-size: 0.88em;
+  overflow-wrap: anywhere;
+}
+
+.page {
+  width: min(1040px, 100% - 32px);
+  margin: 0 auto;
+  padding: 72px 0 40px;
+}
+
+.hero {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+}
+
+.logo {
+  border-radius: 20px;
+  box-shadow: 0 10px 24px -10px rgb(20 50 70 / 0.45);
+}
+
+h1 {
+  margin: 18px 0 6px;
+  color: var(--strong);
+  font-size: clamp(32px, 6vw, 48px);
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.lede {
+  margin: 0;
+  max-width: 34ch;
+  color: var(--muted);
+  font-size: 19px;
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 26px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  height: 46px;
+  padding: 0 22px;
+  border-radius: 99px;
+  background: var(--card);
+  box-shadow:
+    0 0 0 1px var(--line),
+    0 8px 18px -12px rgb(20 50 70 / 0.5);
+  color: var(--strong);
+  font-weight: 650;
+  text-decoration: none;
+  transition: scale 0.25s cubic-bezier(0.3, 1.45, 0.5, 1);
+}
+
+.btn:hover {
+  scale: 1.03;
+}
+
+.btn:active {
+  scale: 0.97;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--sky);
+  outline-offset: 3px;
+}
+
+.btn-primary {
+  background: linear-gradient(#6fd0f6, var(--sky) 55%, var(--sky-deep));
+  box-shadow:
+    inset 0 1px 0 rgb(255 255 255 / 0.5),
+    0 10px 22px -12px rgb(42 166 220 / 0.9);
+  color: #fff;
+  text-shadow: 0 1px 1px rgb(20 90 130 / 0.35);
+}
+
+.shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+  margin-top: 48px;
+  border-radius: 22px;
+  box-shadow:
+    0 0 0 1px var(--line),
+    var(--shadow);
+}
+
+.install {
+  margin-top: 56px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  color: var(--strong);
+  font-size: 22px;
+}
+
+h3 {
+  margin: 0 0 6px;
+  color: var(--strong);
+  font-size: 16px;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.steps > div {
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: 0 0 0 1px var(--line);
+}
+
+.steps ol {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 22px;
+  padding: 0 16px 48px;
+  font-size: 14px;
+}
+
+.foot a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.foot a:hover {
+  color: var(--ink);
+}
+
+/* The privacy policy, rendered from PRIVACY.md. */
+.prose {
+  width: min(720px, 100% - 32px);
+  padding-top: 40px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--strong);
+  font-weight: 650;
+  text-decoration: none;
+}
+
+.back img {
+  border-radius: 8px;
+}
+
+.prose h1 {
+  margin-top: 36px;
+  font-size: clamp(28px, 5vw, 38px);
+}
+
+.prose h2 {
+  margin-top: 34px;
+}
+
+.prose li + li {
+  margin-top: 6px;
+}
+
+@media (max-width: 600px) {
+  .page {
+    padding-top: 48px;
+  }
+
+  .actions,
+  .btn {
+    width: 100%;
+  }
+
+  .btn {
+    justify-content: center;
+  }
+
+  .shot img {
+    margin-top: 36px;
+    border-radius: 14px;
+  }
+}

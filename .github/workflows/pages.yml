@@ -1,0 +1,57 @@
+# Builds the project page (site/ and PRIVACY.md, scripts/site.mjs) and deploys it to GitHub Pages,
+# served at https://ankush.one/newtab-mii-plaza/ through the user site's custom domain.
+name: Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - site/**
+      - scripts/site.mjs
+      - PRIVACY.md
+      - public/icon/**
+      - .github/workflows/pages.yml
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: pnpm/action-setup@v6
+        with:
+          version: 12.15.0
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      - run: pnpm site
+
+      - uses: actions/upload-pages-artifact@v5
+        with:
+          path: .site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5

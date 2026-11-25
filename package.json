@@ -1,12 +1,12 @@
 {
-  "name": "new-tab-mii-plaza",
+  "name": "newtab-mii-plaza",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "license": "AGPL-3.0-only",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ankushKun/new-tab-mii-plaza.git"
+    "url": "git+https://github.com/ankushKun/newtab-mii-plaza.git"
   },
   "scripts": {
     "dev": "wxt",
@@ -15,6 +15,7 @@
     "zip": "wxt zip && wxt zip -b firefox",
     "zip:sources": "wxt zip --sources && wxt zip -b firefox --sources",
     "check": "tsc --noEmit",
+    "site": "node scripts/site.mjs",
     "postinstall": "wxt prepare"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@types/three": "0.187.0",
+    "marked": "^18.2.0",
     "typescript": "^6.0.3",
     "wxt": "0.21.5"
   }
