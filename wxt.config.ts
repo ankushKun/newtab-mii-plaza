@@ -35,10 +35,13 @@ export default defineConfig({
       browser_specific_settings: {
         gecko: {
           id: 'plaza-newtab@ankush.one',
-          strict_min_version: '128.0',
+          // 140 is where data_collection_permissions arrived, so AMO's linter stays quiet. Android isn't supported
+          // (there's no new tab override there), but AMO still checks its minimum, which got the key in 142.
+          strict_min_version: '140.0',
           // Nothing leaves the browser: pins sync through the browser's own account.
           data_collection_permissions: { required: ['none'] },
         },
+        gecko_android: { strict_min_version: '142.0' },
       },
     }),
   }),

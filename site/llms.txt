@@ -19,7 +19,7 @@
 ## Install
 
 - Chrome, Edge, Brave, Opera, Vivaldi: download the Chrome zip from https://github.com/ankushKun/newtab-mii-plaza/releases/latest, unzip it, then Load unpacked in chrome://extensions with Developer mode on.
-- Firefox 128 or newer: download the Firefox zip and use Load Temporary Add-on in about:debugging#/runtime/this-firefox. Firefox removes it on restart until the add-on is listed on Firefox Add-ons.
+- Firefox 140 or newer: download the Firefox zip and use Load Temporary Add-on in about:debugging#/runtime/this-firefox. Firefox removes it on restart until the add-on is listed on Firefox Add-ons.
 - Safari and phones are not supported.
 
 ## Privacy
