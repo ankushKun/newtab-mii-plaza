@@ -76,8 +76,9 @@ code {
 }
 
 .icon {
-  width: 13px;
-  height: 13px;
+  display: block;
+  width: 12px;
+  height: 12px;
   flex: none;
 }
 
@@ -127,11 +128,16 @@ code {
   color: var(--strong);
 }
 
+.head-links a:has(.mark) {
+  padding-left: 5px;
+}
+
 .mark {
   display: grid;
+  flex: none;
   place-items: center;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   color: #fff;
 }
@@ -146,6 +152,10 @@ code {
 
 .mark-sponsor {
   background: #ea4aaa;
+}
+
+.mark-sponsor .icon {
+  transform: translateY(0.5px);
 }
 
 .mark-kofi {
@@ -180,7 +190,7 @@ code {
 }
 
 h1 {
-  max-width: 20ch;
+  max-width: 22ch;
   margin: 18px 0 0;
   color: var(--strong);
   font-size: clamp(32px, 5vw, 46px);
@@ -191,7 +201,7 @@ h1 {
 }
 
 .lead {
-  max-width: 48ch;
+  max-width: 56ch;
   margin: 12px 0 0;
   color: var(--muted);
   font-size: clamp(15px, 1.8vw, 17px);
@@ -352,11 +362,6 @@ h1 {
   font-weight: 750;
 }
 
-.install-note {
-  margin: 0 0 16px;
-  color: var(--muted);
-  font-size: 14px;
-}
 
 /* The visitor's browser goes first in the install steps too. */
 :root[data-browser='firefox'] [data-steps='firefox'] {
@@ -393,6 +398,70 @@ h1 {
   margin-top: 5px;
 }
 
+/* FAQ --------------------------------------------------------------------------------------------- */
+
+.faq {
+  margin-top: 48px;
+  padding-top: 28px;
+  border-top: 1px solid var(--line);
+}
+
+.faq h2 {
+  margin: 0 0 14px;
+  color: var(--strong);
+  font-size: 20px;
+  font-weight: 750;
+}
+
+.faq-list {
+  display: grid;
+  gap: 8px;
+}
+
+.faq details {
+  border-radius: 14px;
+  background: var(--surface);
+}
+
+.faq summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 18px;
+  color: var(--strong);
+  font-size: 14.5px;
+  font-weight: 650;
+  list-style: none;
+  cursor: pointer;
+}
+
+.faq summary::-webkit-details-marker {
+  display: none;
+}
+
+.faq summary::after {
+  content: '+';
+  flex: none;
+  color: var(--muted);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1;
+  transition: transform 0.18s ease;
+}
+
+.faq details[open] summary::after {
+  transform: rotate(45deg);
+}
+
+.faq details p {
+  margin: 0;
+  padding: 0 18px 15px;
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.55;
+}
+
 /* Footer & Support -------------------------------------------------------------------------------- */
 
 .foot {
@@ -418,7 +487,7 @@ h1 {
   align-items: center;
   gap: 7px;
   height: 32px;
-  padding: 0 12px 0 7px;
+  padding: 0 12px 0 5px;
   border-radius: 99px;
   background: var(--soft);
   color: var(--strong);
@@ -450,6 +519,23 @@ h1 {
   color: var(--strong);
 }
 
+.legal {
+  max-width: 640px;
+  margin: 0;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.6;
+  text-wrap: pretty;
+}
+
+.legal a {
+  color: inherit;
+}
+
+.legal a:hover {
+  color: var(--strong);
+}
+
 /* Privacy policy (site/privacy.html) -------------------------------------------------------------- */
 
 .prose {
@@ -478,12 +564,38 @@ h1 {
 }
 
 .prose h2 {
-  margin-top: 34px;
+  margin-top: 32px;
   color: var(--strong);
+  font-size: 19px;
+  font-weight: 750;
+}
+
+
+.prose ul {
+  padding-left: 20px;
 }
 
 .prose li + li {
   margin-top: 6px;
+}
+
+.prose-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+}
+
+.prose-foot a {
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.prose-foot a:hover {
+  color: var(--strong);
 }
 
 @media (max-width: 720px) {

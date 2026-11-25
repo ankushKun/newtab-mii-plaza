@@ -49,6 +49,7 @@ pnpm zip:sources    # Store zips + source archives (needed for AMO review)
   - `chrome_url_overrides.newtab`: Replaces the New Tab page with the New Tab Mii Plaza interface.
 - **Remote Code:** `No, I am not using remote code` (Three.js, WebAssembly, and shaders are bundled inside the extension package; `'wasm-unsafe-eval'` only enables local WebAssembly execution).
 - **Privacy Policy URL:** `https://ankush.one/newtab-mii-plaza/privacy/`, built from `PRIVACY.md` by the Pages workflow.
+- **Support URL:** `https://ankush.one/newtab-mii-plaza/support/`, built from `site/support.html`.
 - **Homepage URL:** `https://ankush.one/newtab-mii-plaza/`
 - **Required Store Graphics:**
   - Extension icon: 128x128 PNG (`public/icon/128.png`)

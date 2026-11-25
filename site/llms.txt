@@ -1,0 +1,35 @@
+# New Tab Mii Plaza
+
+> A browser extension for Chrome and Firefox that replaces the new tab page with a recreation of the Wii U's Wara Wara Plaza: up to ten pinned sites float around the edge as blocks, and Miis stand and walk in the middle. Free and open source (AGPL-3.0), made by Ankush Singh. A fan project, not affiliated with Nintendo.
+
+## Pages
+
+- [Home and install](https://ankush.one/newtab-mii-plaza/): download links, install steps and common questions
+- [Support](https://ankush.one/newtab-mii-plaza/support/): controls, fixes for common problems and where to report bugs
+- [Privacy policy](https://ankush.one/newtab-mii-plaza/privacy/): what is stored and where
+- [Everything above in one file](https://ankush.one/newtab-mii-plaza/llms-full.txt)
+
+## What it does
+
+- Pin up to ten sites. Each block shows the site's icon and colour, fetched from the site once when pinned, or a PNG, JPG, WebP, SVG or animated GIF you choose. Right-click a block to edit it, click it to open the site.
+- Add Miis by dropping in pictures of 3DS or Wii U Mii QR codes in Settings > Miis. The codes are read in the browser and never uploaded. Miis can be picked up and thrown.
+- Settings (the gear, or the ? key) has light, dark and automatic themes, an optional clock, Mii voices on or off, drag to reorder blocks, and export or import of pins as JSON.
+- The plaza stops drawing after five minutes without input, and a tab hidden for three minutes frees its graphics memory.
+
+## Install
+
+- Chrome, Edge, Brave, Opera, Vivaldi: download the Chrome zip from https://github.com/ankushKun/newtab-mii-plaza/releases/latest, unzip it, then Load unpacked in chrome://extensions with Developer mode on.
+- Firefox 128 or newer: download the Firefox zip and use Load Temporary Add-on in about:debugging#/runtime/this-firefox. Firefox removes it on restart until the add-on is listed on Firefox Add-ons.
+- Safari and phones are not supported.
+
+## Privacy
+
+- No account, ads, analytics or tracking.
+- Pins and settings sync through the browser's own account (storage.sync). Miis and custom images stay on the device.
+- The only requests it makes are for a site's title and icon when it is pinned, and https://ankush.one/announcement.json at most every six hours, without cookies.
+
+## Links
+
+- Source: https://github.com/ankushKun/newtab-mii-plaza
+- Releases: https://github.com/ankushKun/newtab-mii-plaza/releases
+- Author: https://ankush.one/
