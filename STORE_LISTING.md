@@ -15,51 +15,17 @@ pnpm zip:sources    # Store zips + source archives (needed for AMO review)
 
 ---
 
-## 2. Store Listing Copy
+## 2. Store Listing and Chrome Web Store Answers
 
-"Mii", "Wii U" and "3DS" are Nintendo trademarks, and the name and description below use "Mii". Reviewers may flag this, so be ready to rename (for example "New Tab Plaza") if either store asks.
+- [`store/listing.md`](./store/listing.md): summary, description, category, URLs and which graphic goes where.
+- [`store/cws-privacy.md`](./store/cws-privacy.md): single purpose, permission justifications, remote code and data usage for the Chrome Web Store privacy tab.
+- Privacy policy URL: `https://ankush.one/newtab-mii-plaza/privacy/`, built from `PRIVACY.md` by the Pages workflow.
 
-- **Name:** `New Tab Mii Plaza`
-- **Short description (132 chars max for CWS):**
-  `Your favorite sites in floating 3D glass blocks over a lively plaza, on every new tab.`
-- **Detailed description:**
-  ```text
-  New Tab Mii Plaza replaces your default new tab page with a calm, interactive 3D plaza and ten floating glass blocks for your favorite sites.
-
-  Features:
-  - Pin up to 10 sites in glossy glass blocks. Enter any URL or domain to autofetch its title, icon, and brand color, or pick your own custom PNG, JPG, or animated GIF for any block. Click a pinned block to dive straight in, or right-click to edit or remove it.
-  - Manage and reorder all 10 blocks visually on a spatial plaza layout in Settings, upload Mii QR code images to populate the plaza alongside your default Mii, switch between Auto, Light, and Dark themes, or export and import pins as JSON.
-  - Interact with the plaza: drag blocks to spin them, scroll or pinch (or press + and -) to zoom, and click or drag characters walking around the floor.
-  - Automatic light and dark themes following your system appearance, plus an optional minimal corner clock.
-  - Built to stay lightweight on tab open: starts straight into the live scene, pauses when idle, and releases GPU memory when hidden.
-  - Local-first privacy: your pins sync only through your browser account, with zero analytics or tracking.
-  ```
+"Mii", "Wii U" and "3DS" are Nintendo trademarks and the name uses "Mii". Reviewers may flag this, so be ready to rename (for example "New Tab Plaza") if either store asks.
 
 ---
 
-## 3. Chrome Web Store Disclosures
-
-- **Category:** Productivity (or Photos / Appearance)
-- **Single Purpose Description:**
-  `Replaces the browser New Tab page with a 3D interactive plaza displaying up to 10 user-pinned site shortcuts as glass blocks.`
-- **Permission Justifications:**
-  - `storage`: Stores and syncs the user's pinned site URLs, titles, accent colors, and clock preference across signed-in browser profiles, and caches fetched 256x256 PNG favicons and site metadata locally.
-  - `favicon`: Reads favicons from Chrome's local favicon cache as an offline fallback.
-  - `host_permissions` (`http://*/*`, `https://*/*`): Automatically fetches a pinned site's page title, `theme-color`, and highest-resolution favicon directly from the target URL when added, without prompting or contacting external third-party icon proxies. Cached locally in `storage.local` and pruned when unpinned. Also reads the developer's public announcement file (`https://ankush.one/announcement.json`) at most every six hours, without cookies or identifiers.
-  - `chrome_url_overrides.newtab`: Replaces the New Tab page with the New Tab Mii Plaza interface.
-- **Remote Code:** `No, I am not using remote code` (Three.js, WebAssembly, and shaders are bundled inside the extension package; `'wasm-unsafe-eval'` only enables local WebAssembly execution).
-- **Privacy Policy URL:** `https://ankush.one/newtab-mii-plaza/privacy/`, built from `PRIVACY.md` by the Pages workflow.
-- **Support URL:** `https://ankush.one/newtab-mii-plaza/support/`, built from `site/support.html`.
-- **Support email:** `miiplaza@ankush.one` (CWS developer contact and AMO support email).
-- **Homepage URL:** `https://ankush.one/newtab-mii-plaza/`
-- **Required Store Graphics:**
-  - Extension icon: 128x128 PNG (`public/icon/128.png`)
-  - Screenshots: 1280x800 PNG/JPEG (recommended 4 shots: populated light mode, populated dark mode, pin editor modal, manage/reorder sheet)
-  - Small promo tile: 440x280 PNG/JPEG
-
----
-
-## 4. Firefox Add-ons (AMO) Submission Notes
+## 3. Firefox Add-ons (AMO) Submission Notes
 
 Because WXT/Vite outputs minified JavaScript bundles (`.output/firefox-mv3/chunks/*.js`) and includes Emscripten WebAssembly glue, AMO requires submitting the **source code zip** produced by `pnpm zip:sources`.
 
@@ -84,7 +50,7 @@ Notes on vendored files and WebAssembly:
 
 ---
 
-## 5. Pre-Submission Checklist
+## 4. Pre-Submission Checklist
 
 - [ ] Pick **GNU Affero General Public License v3.0** as the license on AMO, and keep the GitHub repo public with each released version tagged. The AGPL requires that anyone who gets the extension can get its source. `homepage_url` and the GitHub link in Settings point there.
 - [ ] Review third-party binary assets in `public/ffl/` (`FFLResHigh.dat`, `body-m.glb`, `body-f.glb`) against store IP policies before publishing publicly.

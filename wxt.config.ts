@@ -5,7 +5,7 @@ export default defineConfig({
   // Manifest V3 in both browsers: one manifest shape, one content security policy.
   manifestVersion: 3,
   // The source archive AMO reviews holds what builds the extension, not the project page or CI.
-  zip: { excludeSources: ['site/**', 'scripts/**', '.github/**'] },
+  zip: { excludeSources: ['site/**', 'scripts/**', 'store/**', '.github/**'] },
   // Ship the license and third-party notices inside every package (AGPL, MIT, Apache and BSD all ask for it).
   hooks: {
     'build:publicAssets': (wxt, files) => {
@@ -17,7 +17,8 @@ export default defineConfig({
   manifest: ({ browser }) => ({
     name: 'New Tab Mii Plaza',
     short_name: 'Mii Plaza',
-    description: 'Your sites in glass blocks over a busy plaza, on every new tab.',
+    // Also the Chrome Web Store's summary under the name, which allows 132 characters.
+    description: "Every new tab becomes the Wii U's Wara Wara Plaza, with your favourite sites around the edge and Miis hanging out in the middle.",
     homepage_url: 'https://github.com/ankushKun/newtab-mii-plaza',
     action: {
       default_title: 'Open New Tab Mii Plaza',
