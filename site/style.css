@@ -98,8 +98,9 @@ h1 {
 .btn {
   display: inline-flex;
   align-items: center;
+  gap: 10px;
   height: 46px;
-  padding: 0 22px;
+  padding: 0 22px 0 14px;
   border-radius: 99px;
   background: var(--card);
   box-shadow:
@@ -109,6 +110,24 @@ h1 {
   font-weight: 650;
   text-decoration: none;
   transition: scale 0.25s cubic-bezier(0.3, 1.45, 0.5, 1);
+}
+
+.bi {
+  width: 24px;
+  height: 24px;
+  flex: none;
+}
+
+.bi-sprite {
+  position: absolute;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+
+/* The visitor's browser goes first in the install steps too. */
+:root[data-browser='firefox'] [data-steps='firefox'] {
+  order: -1;
 }
 
 .btn:hover {
