@@ -50,14 +50,14 @@ New Tab Mii Plaza is a fan project, not affiliated with or endorsed by Nintendo.
 
 All in this folder, made from the real extension with a crowd of Miis added through Settings > Miis.
 
-| File | Use |
-| --- | --- |
-| `../public/icon/128.png` | Store icon, 128x128 |
-| `screenshots/1-plaza-light.png` | Screenshot: the plaza with the first-run tip |
-| `screenshots/2-plaza-dark.png` | Screenshot: dark theme, zoomed in on the crowd |
-| `screenshots/3-settings.png` | Screenshot: Settings |
-| `screenshots/4-edit-block.png` | Screenshot: editing a block |
-| `promo-440x280.png` | Chrome small promo tile |
-| `marquee-1400x560.png` | Chrome marquee, only used if Chrome features it |
+| File | Use | Caption (AMO) |
+| --- | --- | --- |
+| `../public/icon/128.png` | Store icon, 128x128 | |
+| `screenshots/1-plaza-light.png` | Screenshot: the plaza with the first-run tip | Your favourite sites float around the plaza while your Miis hang out in the middle. |
+| `screenshots/2-plaza-dark.png` | Screenshot: dark theme, zoomed in on the crowd | Dark mode, zoomed in on the crowd. Scroll or pinch to get closer. |
+| `screenshots/3-settings.png` | Screenshot: Settings | Settings: drag blocks to reorder them, pick a theme, turn on the clock and back up your pins. |
+| `screenshots/4-edit-block.png` | Screenshot: editing a block | Right-click a block to change its address, name or picture. |
+| `promo-440x280.png` | Chrome small promo tile | |
+| `marquee-1400x560.png` | Chrome marquee, only used if Chrome features it | |
 
 Screenshots are 1280x800, the size both stores take.
