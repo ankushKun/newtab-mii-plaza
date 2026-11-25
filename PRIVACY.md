@@ -18,11 +18,15 @@ New Tab Mii Plaza does not collect, transmit, sell, or share personal informatio
    - When you pin an `http:` or `https:` site, the extension automatically fetches that site's page metadata (`<title>`, `theme-color`, and favicon link) once using `credentials: 'omit'` and caches a `256x256` PNG icon and title/accent locally in `browser.storage.local` (with Chrome's local `/_favicon/` cache as an offline fallback).
    - No pinned URLs or browsing data are sent to any developer or third-party server. When a site is unpinned, its cached icon and metadata are automatically removed.
 
+4. **Announcements from ankush.one**
+   - Every six hours at most, the extension reads `https://ankush.one/announcement.json`, a public file listing the developer's newest announcement, and your Mii says it once in the plaza. The request carries no cookies, identifiers, pins or browsing data. Like any web request, it reveals your IP address and browser to the site's hosts (GitHub Pages and Cloudflare).
+   - The announcement, its icon and the ids of announcements already shown are kept in `browser.storage.local` so each one appears only once.
+
 ## Permissions summary
 
 - `storage`: Save and sync your pinned sites and display preferences across your devices, and store cached favicons locally.
 - `favicon` (Chrome only): Fallback to Chrome's local favicon cache when offline.
-- `host_permissions` (`http://*/*`, `https://*/*`): Allow direct automatic fetching of page titles, theme colors, and favicons from sites you pin without contacting third-party icon servers.
+- `host_permissions` (`http://*/*`, `https://*/*`): Allow direct automatic fetching of page titles, theme colors, and favicons from sites you pin without contacting third-party icon servers, and reading announcements from ankush.one.
 
 ## Contact
 

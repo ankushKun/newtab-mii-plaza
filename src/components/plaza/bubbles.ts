@@ -102,6 +102,11 @@ export class Bubbles {
     this.last = -Infinity;
   }
 
+  /** Takes back `post` if it was asked for with `sayNext` and hasn't been said yet. */
+  unsay(post: PlazaPost) {
+    if (this.first === post) this.first = null;
+  }
+
   /** Removes every bubble at once. */
   clear() {
     for (const a of this.active) a.el.remove();

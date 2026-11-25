@@ -45,7 +45,7 @@ pnpm zip:sources    # Store zips + source archives (needed for AMO review)
 - **Permission Justifications:**
   - `storage`: Stores and syncs the user's pinned site URLs, titles, accent colors, and clock preference across signed-in browser profiles, and caches fetched 256x256 PNG favicons and site metadata locally.
   - `favicon`: Reads favicons from Chrome's local favicon cache as an offline fallback.
-  - `host_permissions` (`http://*/*`, `https://*/*`): Automatically fetches a pinned site's page title, `theme-color`, and highest-resolution favicon directly from the target URL when added, without prompting or contacting external third-party icon proxies. Cached locally in `storage.local` and pruned when unpinned.
+  - `host_permissions` (`http://*/*`, `https://*/*`): Automatically fetches a pinned site's page title, `theme-color`, and highest-resolution favicon directly from the target URL when added, without prompting or contacting external third-party icon proxies. Cached locally in `storage.local` and pruned when unpinned. Also reads the developer's public announcement file (`https://ankush.one/announcement.json`) at most every six hours, without cookies or identifiers.
   - `chrome_url_overrides.newtab`: Replaces the New Tab page with the New Tab Mii Plaza interface.
 - **Remote Code:** `No, I am not using remote code` (Three.js, WebAssembly, and shaders are bundled inside the extension package; `'wasm-unsafe-eval'` only enables local WebAssembly execution).
 - **Privacy Policy URL:** Host `PRIVACY.md` at a public URL (for example on GitHub Pages or your personal domain) and link it in the Developer Dashboard (and optionally as `homepage_url` in `wxt.config.ts`).
@@ -76,7 +76,7 @@ Build steps from the uploaded source archive:
 Notes on vendored files and WebAssembly:
 - public/ffl/ffl.wasm and src/components/mii/vendor/ffl-emscripten.js are the compiled FFL WebAssembly library (Emscripten build from github.com/ankushKun/mii-creator), executed locally under CSP "wasm-unsafe-eval".
 - src/components/mii/vendor/ffl.js and FFLShaderMaterial.js are from github.com/ariankordi/FFL.js (AGPL-3.0-only), and struct-fu.js is from github.com/natevw/struct-fu (BSD-2-Clause). LICENSE and THIRD_PARTY_NOTICES.md list every third-party component.
-- No remote code is executed. Network requests occur only when pinning a site to fetch its page title, theme color, and favicon directly with `credentials: 'omit'` and cache them locally.
+- No remote code is executed. Network requests occur only when pinning a site to fetch its page title, theme color, and favicon directly with `credentials: 'omit'` and cache them locally, and at most every six hours to read https://ankush.one/announcement.json, plain JSON whose text is shown with textContent.
 ```
 
 ---
@@ -92,4 +92,5 @@ Notes on vendored files and WebAssembly:
   - Pinning a site (verify instant save, then title, icon and accent color load)
   - Removing a site (verify its cached icon and metadata are cleaned up)
   - Uploading a batch of Mii QR codes and opening the Miis tab in Settings
+  - Announcements: a live one is said once on the second tab (the first shows the welcome), then never again
   - Reordering pins via drag-and-drop and Prev/Next buttons, JSON export/import, zoom controls, optional clock, and light/dark switching

@@ -28,6 +28,8 @@ import {
   type ThemeMode,
 } from '@/newtab/pins';
 import type { Plaza } from '@/newtab/plaza';
+import type { PlazaPost } from '@/components/plaza/types';
+import { CORNER_LINKS, makeSupportBadge } from '@/newtab/support';
 import { drawTile, loadBrandLogo } from '@/newtab/tiles';
 
 /** A tab hidden this long gives its GPU back, and reloads when it is shown again. */
@@ -42,6 +44,7 @@ const nav = need(root.querySelector<HTMLElement>('.plaza-links'));
 const clockEl = need(root.querySelector<HTMLElement>('.plaza-clock'));
 const timeEl = need(clockEl.querySelector<HTMLTimeElement>('.plaza-time'));
 const dateEl = need(clockEl.querySelector<HTMLElement>('.plaza-date'));
+const supportEl = need(root.querySelector<HTMLElement>('.plaza-support'));
 const toastEl = need(root.querySelector<HTMLElement>('.plaza-toast'));
 const manageBtn = need(root.querySelector<HTMLButtonElement>('.hud-manage'));
 
@@ -173,12 +176,69 @@ function renderClock() {
   clockTimer = window.setTimeout(renderClock, Math.max(1000, msToNextMinute));
 }
 
+function renderSupport() {
+  if (!prefs.showSupport) {
+    supportEl.hidden = true;
+    return;
+  }
+  if (!supportEl.hasChildNodes()) {
+    for (const item of CORNER_LINKS) {
+      const a = document.createElement('a');
+      a.className = 'plaza-support-link';
+      a.href = item.href;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+      a.setAttribute('aria-label', `${item.label} (opens in a new tab)`);
+      const tag = document.createElement('span');
+      tag.className = 'plaza-support-tag';
+      tag.textContent = item.label;
+      a.append(makeSupportBadge(item), tag);
+      supportEl.append(a);
+    }
+  }
+  supportEl.hidden = false;
+}
+
 // The plaza --------------------------------------------------------------------------------------
 
 let released = false;
 function reloadWhenShown() {
   released = true;
   if (!document.hidden) location.reload();
+}
+
+const idle = (fn: () => void) => ('requestIdleCallback' in window ? requestIdleCallback(fn, { timeout: 2000 }) : setTimeout(fn, 200));
+
+/** The announcement this tab's Mii is about to say or has said, and what to do once it is said. */
+let announcing: { post: PlazaPost; said(): void } | null = null;
+
+/** Your Mii says the newest announcement from ankush.one, once across every tab (announce.ts). */
+async function announce(activePlaza: Plaza) {
+  const { dueAnnouncement, markSeen, onSeen } = await import('@/newtab/announce');
+  const one = await dueAnnouncement().catch(() => null);
+  if (!one || released || document.hidden || plaza !== activePlaza) return;
+  const thumb = one.icon ?? activePlaza.renderPortrait(miis.myMii.code, miis.myMii.leftEye) ?? undefined;
+  const post: PlazaPost = {
+    cube: 0,
+    tag: miis.myMii.name,
+    text: one.text,
+    href: one.url,
+    me: true,
+    kind: 'announcement',
+    ...(thumb ? { thumb, mii: !one.icon } : {}),
+  };
+  // Said in another tab first: this one keeps quiet.
+  const stop = onSeen((ids) => {
+    if (ids.includes(one.id)) activePlaza.bubbles.unsay(post);
+  });
+  announcing = {
+    post,
+    said() {
+      stop();
+      void markSeen(one.id);
+    },
+  };
+  activePlaza.bubbles.sayNext(post, 12);
 }
 
 async function boot() {
@@ -205,13 +265,19 @@ async function boot() {
     onLive() {
       root.dataset.state = 'live';
       if (prefs.showClock) renderClock();
-      if (!welcomed && plaza) {
-        const activePlaza = plaza;
-        activePlaza.bubbles.onSay = (post) => {
-          if (post.href !== '#settings' || welcomed) return;
-          welcomed = true;
-          void browser.storage.local.set({ [WELCOMED_KEY]: true });
-        };
+      renderSupport();
+      if (!plaza) return;
+      const activePlaza = plaza;
+      activePlaza.bubbles.onSay = (post) => {
+        if (post === announcing?.post) announcing.said();
+        if (post.href !== '#settings' || welcomed) return;
+        welcomed = true;
+        void browser.storage.local.set({ [WELCOMED_KEY]: true });
+      };
+      // The first tab shows how things work; announcements wait for the next one.
+      if (welcomed) {
+        idle(() => void announce(activePlaza));
+      } else {
         setTimeout(() => {
           if (welcomed || released || document.hidden || plaza !== activePlaza) return;
           const thumb = activePlaza.renderPortrait(miis.myMii.code, miis.myMii.leftEye) ?? undefined;
@@ -314,7 +380,6 @@ async function openManage() {
       getPins: () => pins,
       getPrefs: () => prefs,
       getMiis: () => miis,
-      getZoom: () => plaza?.getZoom() ?? 0,
       renderThumb: renderThumbCanvas,
       peekMiiPortrait: (code, leftEye) => plaza?.peekPortrait(code, leftEye) ?? null,
       renderMiiPortrait: (code, leftEye) => plaza?.renderPortrait(code, leftEye) ?? null,
@@ -329,6 +394,7 @@ async function openManage() {
         plaza?.setTheme(prefs.theme);
         plaza?.setMuted(prefs.muteVoices);
         renderClock();
+        renderSupport();
         await savePrefs(next);
       },
       onSaveMiis: async (next) => {
@@ -338,7 +404,6 @@ async function openManage() {
         await saveMiis(next);
       },
       onEditSlot: (slot) => edit(slot),
-      onSetZoom: (level) => plaza?.setZoom(level),
       onToast: showToast,
     });
   }
@@ -711,6 +776,7 @@ onStateChanged(({ pins: nextPins, prefs: nextPrefs }) => {
     plaza?.setTheme(prefs.theme);
     plaza?.setMuted(prefs.muteVoices);
     renderClock();
+    renderSupport();
     manageApi?.refresh();
   }
   if (!nextPins) return;

@@ -92,7 +92,8 @@ dialog:focus-visible {
 }
 
 .plaza[data-state='loading'] .plaza-links,
-.plaza[data-state='loading'] .hud-manage {
+.plaza[data-state='loading'] .hud-manage,
+.plaza[data-state='loading'] .plaza-support {
   display: none;
 }
 
@@ -152,10 +153,14 @@ dialog:focus-visible {
 /* Diving into a block: the tags and HUD go, and the plaza fades as the camera reaches it. */
 .plaza[data-leaving] .plaza-links,
 .plaza[data-leaving] .hud-manage,
-.plaza[data-leaving] .plaza-clock,
+.plaza[data-leaving] .plaza-corner,
 .plaza[data-leaving] .plaza-who {
   opacity: 0;
   transition: opacity 0.15s ease;
+}
+
+.plaza[data-leaving] .plaza-corner {
+  pointer-events: none;
 }
 
 .plaza[data-leaving] .plaza-bubbles {
@@ -505,19 +510,164 @@ dialog:focus-visible {
   transform: scale(1.08);
 }
 
-.plaza-clock {
+.plaza-corner {
   position: absolute;
-  left: 22px;
-  bottom: 20px;
+  left: max(15px, env(safe-area-inset-left));
+  bottom: max(15px, env(safe-area-inset-bottom));
   z-index: 2;
   display: grid;
+  justify-items: start;
+  gap: 10px;
+  pointer-events: none;
+}
+
+.plaza-clock {
+  display: grid;
   gap: 1px;
+  padding-left: 3px;
   pointer-events: none;
   text-shadow: light-dark(0 1px 10px rgb(255 255 255 / 0.7), 0 1px 12px rgb(0 0 0 / 0.55));
 }
 
-.plaza-clock[hidden] {
+.plaza-clock[hidden],
+.plaza-support[hidden] {
   display: none;
+}
+
+.plaza-support {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.plaza-support-link {
+  position: relative;
+  display: grid;
+  place-items: center;
+  padding: 3px;
+  border-radius: 9px;
+  text-decoration: none;
+  pointer-events: auto;
+}
+
+.plaza-support-link:focus-visible {
+  outline: none;
+}
+
+.support-badge {
+  position: relative;
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  overflow: hidden;
+  border-radius: 7px;
+  background: var(--badge-bg, #56636b);
+  color: #fff;
+  opacity: 0.92;
+  box-shadow:
+    0 0 0 1px light-dark(rgb(55 70 78 / 0.13), rgb(255 255 255 / 0.16)),
+    0 2px 6px -2px light-dark(rgb(25 50 65 / 0.24), rgb(0 0 0 / 0.55));
+  transition:
+    opacity 0.18s ease,
+    scale 0.3s var(--spring),
+    translate 0.3s var(--spring),
+    box-shadow 0.18s ease;
+}
+
+.support-badge::after {
+  content: '';
+  position: absolute;
+  inset: 0 0 50%;
+  border-radius: 7px 7px 40% 40% / 7px 7px 20% 20%;
+  background: linear-gradient(to bottom, rgb(255 255 255 / 0.3), rgb(255 255 255 / 0.04));
+  pointer-events: none;
+}
+
+.support-badge svg {
+  position: relative;
+  z-index: 1;
+}
+
+.plaza-support-link:focus-visible .support-badge {
+  opacity: 1;
+  scale: 1.14;
+  translate: 0 -1px;
+  box-shadow:
+    0 0 0 2px var(--sky),
+    0 4px 10px -2px light-dark(rgb(25 50 65 / 0.32), rgb(0 0 0 / 0.65));
+}
+
+@media (hover: hover) {
+  .plaza-support-link:hover .support-badge {
+    opacity: 1;
+    scale: 1.15;
+    translate: 0 -1px;
+    box-shadow:
+      0 0 0 1px light-dark(rgb(55 70 78 / 0.18), rgb(255 255 255 / 0.24)),
+      0 4px 10px -2px light-dark(rgb(25 50 65 / 0.32), rgb(0 0 0 / 0.65));
+  }
+}
+
+.plaza-support-link:active .support-badge {
+  scale: 0.94;
+  translate: 0 0;
+  transition-duration: 0.08s;
+}
+
+.plaza-support-tag {
+  position: absolute;
+  bottom: calc(100% + 5px);
+  left: 50%;
+  padding: 0 10px;
+  border-radius: 99px;
+  background: var(--tag);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 24px;
+  white-space: nowrap;
+  box-shadow:
+    0 0 0 1px light-dark(transparent, rgb(255 255 255 / 0.08)),
+    0 2px 8px rgb(0 0 0 / 0.24);
+  opacity: 0;
+  translate: -50% 4px;
+  scale: 0.86;
+  transform-origin: 50% calc(100% + 4px);
+  pointer-events: none;
+  transition:
+    opacity 0.16s ease,
+    translate 0.2s var(--spring),
+    scale 0.22s var(--spring);
+}
+
+.plaza-support-link:nth-child(-n + 2) .plaza-support-tag {
+  left: 0;
+  translate: 0 4px;
+  transform-origin: 12px calc(100% + 4px);
+}
+
+.plaza-support-link:focus-visible .plaza-support-tag {
+  opacity: 1;
+  translate: -50% 0;
+  scale: 1;
+}
+
+.plaza-support-link:nth-child(-n + 2):focus-visible .plaza-support-tag {
+  translate: 0 0;
+}
+
+@media (hover: hover) {
+  .plaza-support-link:hover .plaza-support-tag {
+    opacity: 1;
+    translate: -50% 0;
+    scale: 1;
+  }
+
+  .plaza-support-link:nth-child(-n + 2):hover .plaza-support-tag {
+    translate: 0 0;
+  }
 }
 
 .plaza-time {
@@ -635,7 +785,8 @@ dialog:focus-visible {
 
 .sheet {
   width: min(520px, calc(100vw - 28px));
-  max-height: min(90dvh, 760px);
+  max-height: min(96dvh, 820px);
+  overflow: hidden;
 }
 
 .editor[open],
@@ -953,8 +1104,8 @@ dialog:focus-visible {
 
 .sheet-body {
   display: grid;
-  grid-template-rows: auto 1fr;
-  max-height: min(90dvh, 760px);
+  grid-template-rows: auto minmax(0, 1fr);
+  max-height: min(96dvh, 820px);
 }
 
 .sheet-head {
@@ -971,9 +1122,13 @@ dialog:focus-visible {
 
 .sheet-content {
   display: grid;
-  gap: 14px;
-  padding: 14px 18px 16px;
+  grid-auto-rows: max-content;
+  align-content: start;
+  gap: 12px;
+  min-height: 0;
+  padding: 10px 18px 14px;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 .plaza-map {
@@ -1280,6 +1435,7 @@ dialog:focus-visible {
 }
 
 .sheet-link-badge {
+  position: relative;
   display: grid;
   place-items: center;
   width: 18px;
@@ -1288,6 +1444,22 @@ dialog:focus-visible {
   overflow: hidden;
   color: #fff;
   flex-shrink: 0;
+}
+
+.sheet-link-badge.support-badge {
+  border-radius: 5.5px;
+  opacity: 1;
+  box-shadow:
+    0 0 0 1px light-dark(rgb(55 70 78 / 0.13), rgb(255 255 255 / 0.16)),
+    0 1px 3px rgb(0 0 0 / 0.18);
+}
+
+.sheet-link-badge.support-badge::after {
+  border-radius: 5.5px 5.5px 40% 40% / 5.5px 5.5px 20% 20%;
+}
+
+.sheet-support {
+  padding-top: 0;
 }
 
 .sheet-link-badge img {

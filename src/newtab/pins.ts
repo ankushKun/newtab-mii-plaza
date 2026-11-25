@@ -25,6 +25,8 @@ export interface Prefs {
   clock24h: boolean;
   theme: ThemeMode;
   muteVoices: boolean;
+  /** Show support icon links in the bottom-left corner of the new tab page. */
+  showSupport: boolean;
 }
 
 export const DEFAULT_PREFS: Prefs = {
@@ -32,6 +34,7 @@ export const DEFAULT_PREFS: Prefs = {
   clock24h: false,
   theme: 'system',
   muteVoices: false,
+  showSupport: true,
 };
 
 export const DEFAULT_PINS: Pins = [
@@ -83,6 +86,7 @@ function normalizePrefs(raw: unknown): Prefs {
     clock24h: Boolean(obj.clock24h),
     theme,
     muteVoices: Boolean(obj.muteVoices),
+    showSupport: obj.showSupport !== false,
   };
 }
 

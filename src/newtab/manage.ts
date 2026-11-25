@@ -14,13 +14,13 @@ import {
   type StoredMii,
 } from './miis';
 import { exportPins, importPins, SLOTS, swapPins, type Pin, type Pins, type Prefs, type ThemeMode } from './pins';
+import { DISCORD_LINK, SUPPORT_LINKS, makeBrandSvg, makeSupportBadge } from './support';
 import { drawTile, loadBrandLogo } from './tiles';
 
 export interface ManageContext {
   getPins: () => Pins;
   getPrefs: () => Prefs;
   getMiis: () => MiiCollection;
-  getZoom: () => number;
   renderThumb: (pin: Pin | null) => Promise<HTMLCanvasElement>;
   peekMiiPortrait: (code: string, leftEye?: string) => string | null;
   renderMiiPortrait: (code: string, leftEye?: string) => string | null;
@@ -28,18 +28,10 @@ export interface ManageContext {
   onSavePrefs: (next: Prefs) => Promise<void>;
   onSaveMiis: (next: MiiCollection) => Promise<void>;
   onEditSlot: (slot: number) => void;
-  onSetZoom: (level: number) => void;
   onToast: (message: string) => void;
 }
 
 type SheetTab = 'settings' | 'miis';
-
-const ZOOM_PRESETS = [
-  { label: 'Wide', level: 0 },
-  { label: 'Standard', level: 1 },
-  { label: 'Closer', level: 2 },
-  { label: 'Crowd', level: 3 },
-];
 
 const THEME_MODES: { label: string; value: ThemeMode }[] = [
   { label: 'Auto', value: 'system' },
@@ -300,7 +292,6 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
   function renderSettingsTab(seq: number) {
     const pins = ctx.getPins();
     const prefs = ctx.getPrefs();
-    const activeZoom = Math.round(ctx.getZoom());
 
     // 1. Spatial 4-2-4 Plaza Map mirroring the real 3D layout
     const map = document.createElement('section');
@@ -356,30 +347,6 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
     }
     themeRow.append(themeLabel, themePills);
 
-    // Zoom row
-    const zoomRow = document.createElement('div');
-    zoomRow.className = 'settings-row';
-    const zoomLabel = document.createElement('span');
-    zoomLabel.className = 'settings-label';
-    zoomLabel.textContent = 'Zoom';
-    const zoomPills = document.createElement('div');
-    zoomPills.className = 'segmented';
-    for (const preset of ZOOM_PRESETS) {
-      const btn = document.createElement('button');
-      btn.type = 'button';
-      btn.className = 'seg-btn';
-      btn.textContent = preset.label;
-      btn.setAttribute('aria-pressed', String(activeZoom === preset.level));
-      btn.addEventListener('click', () => {
-        ctx.onSetZoom(preset.level);
-        zoomPills.querySelectorAll('.seg-btn').forEach((el, idx) => {
-          el.setAttribute('aria-pressed', String(ZOOM_PRESETS[idx].level === preset.level));
-        });
-      });
-      zoomPills.append(btn);
-    }
-    zoomRow.append(zoomLabel, zoomPills);
-
     // Clock row (with pill switch + optional 24-hour chip)
     const clockRow = document.createElement('div');
     clockRow.className = 'settings-row';
@@ -432,6 +399,23 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
       void ctx.onSavePrefs({ ...ctx.getPrefs(), muteVoices: !voicesSwitch.checked });
     });
     voicesRow.append(voicesLabel, voicesSwitch);
+
+    // Corner links row
+    const supportRow = document.createElement('div');
+    supportRow.className = 'settings-row';
+    const supportLabel = document.createElement('span');
+    supportLabel.className = 'settings-label';
+    supportLabel.textContent = 'Corner links';
+
+    const supportSwitch = document.createElement('input');
+    supportSwitch.type = 'checkbox';
+    supportSwitch.className = 'switch';
+    supportSwitch.checked = prefs.showSupport;
+    supportSwitch.setAttribute('aria-label', 'Show support and Discord links in the bottom-left corner of the new tab page');
+    supportSwitch.addEventListener('change', () => {
+      void ctx.onSavePrefs({ ...ctx.getPrefs(), showSupport: supportSwitch.checked });
+    });
+    supportRow.append(supportLabel, supportSwitch);
 
     // Backup row
     const backupRow = document.createElement('div');
@@ -486,7 +470,7 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
     backupActions.append(exportBtn, importBtn, importInput);
     backupRow.append(backupLabel, backupActions);
 
-    group.append(themeRow, zoomRow, clockRow, voicesRow, backupRow);
+    group.append(themeRow, clockRow, voicesRow, supportRow, backupRow);
 
     // 3. Compact footer chips + privacy
     const footer = document.createElement('div');
@@ -519,20 +503,6 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
     linksBar.className = 'sheet-links';
     linksBar.setAttribute('aria-label', 'Project links');
 
-    const SVG_NS = 'http://www.w3.org/2000/svg';
-    const makeBrandSvg = (d: string) => {
-      const svg = document.createElementNS(SVG_NS, 'svg');
-      svg.setAttribute('viewBox', '0 0 24 24');
-      svg.setAttribute('width', '12');
-      svg.setAttribute('height', '12');
-      svg.setAttribute('aria-hidden', 'true');
-      const path = document.createElementNS(SVG_NS, 'path');
-      path.setAttribute('fill', 'currentColor');
-      path.setAttribute('d', d);
-      svg.append(path);
-      return svg;
-    };
-
     const GITHUB_PATH =
       'M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12';
     const X_PATH =
@@ -545,6 +515,7 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
       { label: 'ankush.one', href: 'https://ankush.one/', bg: '#d21e14', img: portraitUrl ?? undefined, svgPath: GLOBE_PATH },
       { label: 'GitHub', href: 'https://github.com/ankushKun/new-tab-mii-plaza', bg: '#181717', svgPath: GITHUB_PATH },
       { label: 'Twitter', href: 'https://x.com/ankushKun_', bg: '#000000', svgPath: X_PATH },
+      { label: DISCORD_LINK.label, href: DISCORD_LINK.href, bg: DISCORD_LINK.bg, svgPath: DISCORD_LINK.svgPath },
     ];
     for (const item of linkItems) {
       const a = document.createElement('a');
@@ -572,7 +543,23 @@ export function mountManageSheet(dialog: HTMLDialogElement, ctx: ManageContext) 
       linksBar.append(a);
     }
 
-    footer.append(hints, privacy, linksBar);
+    const supportBar = document.createElement('nav');
+    supportBar.className = 'sheet-links sheet-support';
+    supportBar.setAttribute('aria-label', 'Support');
+    for (const item of SUPPORT_LINKS) {
+      const a = document.createElement('a');
+      a.className = 'sheet-link';
+      a.href = item.href;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer';
+
+      const text = document.createElement('span');
+      text.textContent = item.label;
+      a.append(makeSupportBadge(item, 'sheet-link-badge support-badge', 11), text);
+      supportBar.append(a);
+    }
+
+    footer.append(hints, privacy, linksBar, supportBar);
     content!.append(map, group, footer);
   }
 
