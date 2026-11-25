@@ -33,9 +33,16 @@
   box-sizing: border-box;
 }
 
+/* The glow is drawn once over the first screen, never repeated down a long page or past the end of a short one. */
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(ellipse 90% 60% at 50% 0%, color-mix(in srgb, var(--sky) 14%, transparent), transparent 70%) top / 100% 100vh no-repeat,
+    var(--bg);
+}
+
 body {
   margin: 0;
-  background: radial-gradient(ellipse 90% 60% at 50% 0%, color-mix(in srgb, var(--sky) 14%, transparent), transparent 70%), var(--bg);
   color: var(--ink);
   font-family: var(--font);
   line-height: 1.6;
