@@ -4,7 +4,7 @@
 
 ## Pages
 
-- [Home and install](https://ankush.one/newtab-mii-plaza/): download links, install steps and common questions
+- [Home and install](https://ankush.one/newtab-mii-plaza/): store and download links, install steps and common questions
 - [Support](https://ankush.one/newtab-mii-plaza/support/): controls, fixes for common problems and where to report bugs
 - [Privacy policy](https://ankush.one/newtab-mii-plaza/privacy/): what is stored and where
 - [Everything above in one file](https://ankush.one/newtab-mii-plaza/llms-full.txt)
@@ -18,7 +18,7 @@
 
 ## Install
 
-- Chrome, Edge, Brave, Opera, Vivaldi: download the Chrome zip from https://github.com/ankushKun/newtab-mii-plaza/releases/latest, unzip it, then Load unpacked in chrome://extensions with Developer mode on.
+- Chrome, Edge, Brave, Opera, Vivaldi: add it from the Chrome Web Store at https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk
 - Firefox 140 or newer: download the Firefox zip and use Load Temporary Add-on in about:debugging#/runtime/this-firefox. Firefox removes it on restart until the add-on is listed on Firefox Add-ons.
 - Safari and phones are not supported.
 
