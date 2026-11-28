@@ -2,8 +2,8 @@
 // https://ankush.one/newtab-mii-plaza/. site/index.html is the home page, site/support.html becomes /support/, and
 // PRIVACY.md is rendered into site/privacy.html as /privacy/, so the stores' privacy link always matches the repo.
 // The questions on the home page are the one source for its FAQPage structured data and for llms-full.txt.
-// Each build also asks both stores whether the extension is live (the Pages workflow reruns every few hours to
-// notice an approval) and writes the answer into the page, which checks Firefox again on its own when it loads.
+// Each build also writes the latest version on each store and on GitHub under the buttons (the Pages workflow reruns
+// every few hours, since store reviews land on their own schedule).
 import { copyFile, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { marked } from 'marked';
 
@@ -11,38 +11,35 @@ const OUT = '.site';
 const HOME = 'https://ankush.one/newtab-mii-plaza/';
 const CHROME_ID = 'iomoadjdgikohalaohjpabppalbomibk';
 const AMO_SLUG = 'newtab-mii-plaza';
-const STORES = {
-  chrome: { name: 'Chrome Web Store', url: `https://chromewebstore.google.com/detail/${CHROME_ID}` },
-  firefox: { name: 'Firefox Add-ons', url: `https://addons.mozilla.org/firefox/addon/${AMO_SLUG}/` },
-};
+const REPO = 'ankushKun/newtab-mii-plaza';
 
-/** Whether each store lists it, and at what version. `live` is null when a store couldn't be asked. */
-async function storeStatus() {
-  const ask = async (url, read) => {
+/** The latest version on each store and on GitHub, skipping any that couldn't be asked. */
+async function latestVersions() {
+  const ask = async (url, read, headers = {}) => {
     try {
-      return await read(await fetch(url, { signal: AbortSignal.timeout(10_000) }));
+      const res = await fetch(url, { headers, signal: AbortSignal.timeout(10_000) });
+      return res.ok ? await read(res) : undefined;
     } catch {
-      return { live: null };
+      return undefined;
     }
   };
-  // Chrome's own update check: the version once it's published, "error-unknownApplication" until then.
-  const chrome = ask(
-    `https://clients2.google.com/service/update2/crx?response=updatecheck&acceptformat=crx2,crx3&prodversion=140.0&x=id%3D${CHROME_ID}%26uc`,
-    async (res) => {
-      const xml = await res.text();
-      const version = /<updatecheck\b[^>]*\bversion="([\d.]+)"/.exec(xml)?.[1];
-      if (version) return { live: true, version };
-      return { live: res.ok && /status="error-unknownApplication"|status="noupdate"/.test(xml) ? false : null };
-    },
-  );
-  // AMO's public API: 401 or 404 until the listing is public.
-  const firefox = ask(`https://addons.mozilla.org/api/v5/addons/addon/${AMO_SLUG}/`, async (res) => {
-    if (res.status === 401 || res.status === 404) return { live: false };
-    const data = await res.json();
-    return data.status === 'public' && !data.is_disabled ? { live: true, version: data.current_version?.version } : { live: false };
-  });
-  const [c, f] = await Promise.all([chrome, firefox]);
-  return { chrome: { ...STORES.chrome, ...c }, firefox: { ...STORES.firefox, ...f } };
+  const github = process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {};
+  const versions = await Promise.all([
+    // Chrome's own update check.
+    ask(
+      `https://clients2.google.com/service/update2/crx?response=updatecheck&acceptformat=crx2,crx3&prodversion=140.0&x=id%3D${CHROME_ID}%26uc`,
+      async (res) => /<updatecheck\b[^>]*\bversion="([\d.]+)"/.exec(await res.text())?.[1],
+    ),
+    ask(`https://addons.mozilla.org/api/v5/addons/addon/${AMO_SLUG}/`, async (res) => (await res.json()).current_version?.version),
+    ask(`https://api.github.com/repos/${REPO}/releases/latest`, async (res) => (await res.json()).tag_name?.replace(/^v/, ''), github),
+  ]);
+  return [
+    { name: 'Chrome Web Store', url: `https://chromewebstore.google.com/detail/${CHROME_ID}` },
+    { name: 'Firefox Add-ons', url: `https://addons.mozilla.org/firefox/addon/${AMO_SLUG}/` },
+    { name: 'GitHub', url: `https://github.com/${REPO}/releases/latest` },
+  ]
+    .map((source, i) => ({ ...source, version: versions[i] }))
+    .filter((source) => source.version);
 }
 
 await rm(OUT, { recursive: true, force: true });
@@ -67,21 +64,13 @@ const faqLd = {
   '@id': `${HOME}#faq`,
   mainEntity: faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
-const stores = await storeStatus();
-console.log('Stores:', Object.entries(stores).map(([k, v]) => `${k} ${v.live === null ? 'unknown' : v.live ? `live ${v.version}` : 'not live'}`).join(', '));
-
-// The live listings join the app's structured data.
-let page = home.replace(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/, (whole, json) => {
-  const ld = JSON.parse(json);
-  const app = ld['@graph'].find((node) => node['@type'] === 'SoftwareApplication');
-  const live = Object.values(stores).filter((store) => store.live).map((store) => store.url);
-  if (!app || live.length === 0) return whole;
-  app.sameAs = live;
-  app.installUrl = live;
-  return `<script type="application/ld+json">${JSON.stringify(ld)}</script>`;
-});
-if (!page.includes('<!-- stores -->')) throw new Error('site/index.html lost its <!-- stores --> marker');
-page = page.replace('<!-- stores -->', `<script type="application/json" id="stores">${JSON.stringify(stores)}</script>`);
+const versions = await latestVersions();
+console.log('Versions:', versions.map((v) => `${v.name} ${v.version}`).join(', ') || 'none');
+if (!home.includes('<!-- versions -->')) throw new Error('site/index.html lost its <!-- versions --> marker');
+const versionLine = versions.length
+  ? `<p class="versions">${versions.map((v) => `<a href="${v.url}">${v.name} <b>v${v.version}</b></a>`).join('')}</p>`
+  : '';
+const page = home.replace('<!-- versions -->', versionLine);
 const faqScript = `    <script type="application/ld+json">${JSON.stringify(faqLd)}</script>\n  </head>`;
 await writeFile(`${OUT}/index.html`, page.replace('  </head>', faqScript));
 

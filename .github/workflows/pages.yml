@@ -1,6 +1,6 @@
 # Builds the project page (site/ and PRIVACY.md, scripts/site.mjs) and deploys it to GitHub Pages,
 # served at https://ankush.one/newtab-mii-plaza/ through the user site's custom domain. It also runs on a schedule to
-# pick up store approvals, with nothing but the workflow's own token.
+# pick up new versions on the stores, with nothing but the workflow's own token.
 name: Pages
 
 on:
@@ -13,7 +13,7 @@ on:
       - public/icon/**
       - .github/workflows/pages.yml
   workflow_dispatch:
-  # Rebuilds every three hours so the page notices when a store approves the extension (scripts/site.mjs).
+  # Rebuilds every three hours so the versions under the buttons follow store reviews (scripts/site.mjs).
   schedule:
     - cron: '23 */3 * * *'
 
@@ -42,6 +42,8 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm site
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - uses: actions/upload-pages-artifact@v5
         with:

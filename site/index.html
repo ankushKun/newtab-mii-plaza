@@ -48,6 +48,8 @@
             "image": "https://ankush.one/newtab-mii-plaza/plaza-light.jpg",
             "screenshot": ["https://ankush.one/newtab-mii-plaza/plaza-light.jpg", "https://ankush.one/newtab-mii-plaza/plaza-dark.jpg"],
             "downloadUrl": "https://github.com/ankushKun/newtab-mii-plaza/releases/latest",
+            "installUrl": ["https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk", "https://addons.mozilla.org/firefox/addon/newtab-mii-plaza/"],
+            "sameAs": ["https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk", "https://addons.mozilla.org/firefox/addon/newtab-mii-plaza/"],
             "codeRepository": "https://github.com/ankushKun/newtab-mii-plaza",
             "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
             "author": { "@id": "https://ankush.one/#person" }
@@ -105,7 +107,6 @@
     <header class="site-head">
       <a class="brand" href="#top">New Tab Mii Plaza</a>
       <nav class="head-links" aria-label="Primary">
-        <a href="#install" data-install-link>Install</a>
         <a href="#faq">FAQ</a>
         <a href="https://discord.gg/2zzuECtPV3" target="_blank" rel="noopener noreferrer" aria-label="Discord">
           <span class="mark mark-discord" aria-hidden="true"><svg class="icon"><use href="#i-discord" /></svg></span>
@@ -128,21 +129,21 @@
           <a
             class="btn btn-primary"
             data-get="chrome"
-            href="https://github.com/ankushKun/newtab-mii-plaza/releases/latest/download/newtab-mii-plaza-chrome.zip"
+            href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk"
           >
             <svg class="bi" aria-hidden="true"><use href="#bi-chrome" /></svg>
-            <span><span data-verb>Download for</span> <span data-name>Chrome</span></span>
+            <span>Add to <span data-name>Chrome</span></span>
           </a>
           <a
             class="btn"
             data-get="firefox"
-            href="https://github.com/ankushKun/newtab-mii-plaza/releases/latest/download/newtab-mii-plaza-firefox.zip"
+            href="https://addons.mozilla.org/firefox/addon/newtab-mii-plaza/"
           >
             <svg class="bi" aria-hidden="true"><use href="#bi-firefox" /></svg>
-            <span><span data-verb>Download for</span> <span data-name>Firefox</span></span>
+            <span>Add to Firefox</span>
           </a>
         </div>
-        <p class="stores" data-stores hidden></p>
+        <!-- versions -->
       </section>
 
       <figure class="shot-wrap">
@@ -192,28 +193,6 @@
         </div>
       </section>
 
-      <section class="install" id="install">
-        <h2>Install</h2>
-        <div class="steps">
-          <div data-steps="chrome">
-            <h3>Chrome, Edge, Brave, Opera</h3>
-            <ol>
-              <li>Unzip the download.</li>
-              <li>Open <code>chrome://extensions</code> and turn on Developer mode.</li>
-              <li>Click Load unpacked and pick the unzipped folder.</li>
-            </ol>
-          </div>
-          <div data-steps="firefox">
-            <h3>Firefox</h3>
-            <ol>
-              <li>Open <code>about:debugging#/runtime/this-firefox</code>.</li>
-              <li>Click Load Temporary Add-on and pick the zip.</li>
-              <li>Firefox removes it when it restarts, so this is for trying it out until it's on Firefox Add-ons.</li>
-            </ol>
-          </div>
-        </div>
-      </section>
-
       <section class="faq" id="faq" aria-labelledby="faq-heading">
         <h2 id="faq-heading">Questions</h2>
         <div class="faq-list">
@@ -223,7 +202,7 @@
           </details>
           <details>
             <summary>Which browsers does it work in?</summary>
-            <p>Chrome and browsers built on it, like Edge, Brave, Opera and Vivaldi, install it from the <a href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk">Chrome Web Store</a>. Firefox 140 or newer takes the Firefox download. Safari and phones aren't supported.</p>
+            <p>Chrome and browsers built on it, like Edge, Brave, Opera and Vivaldi, install it from the <a href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk">Chrome Web Store</a>. Firefox 140 or newer installs it from <a href="https://addons.mozilla.org/firefox/addon/newtab-mii-plaza/">Firefox Add-ons</a>. Safari and phones aren't supported.</p>
           </details>
           <details>
             <summary>How do I add my own Mii?</summary>
@@ -279,7 +258,6 @@
     </footer>
 
     <script src="analytics.js"></script>
-    <!-- stores -->
     <script>
       const stage = document.querySelector('[data-shot-stage]');
       const themeButtons = document.querySelectorAll('[data-shot-theme]');
@@ -335,55 +313,10 @@
         }
       }
 
-      // Where each store stands (scripts/site.mjs asks both at build time; Firefox is asked again here, since its
-      // API answers web pages). A live store gets the button; until then the button downloads the release zip and
-      // the line under the buttons says it's coming. Install steps only show for stores that aren't live yet.
-      let stores = null;
-      try {
-        stores = JSON.parse(document.getElementById('stores')?.textContent ?? 'null');
-      } catch {}
-
-      function showStores() {
-        if (!stores) return;
-        const line = document.querySelector('[data-stores]');
-        line.replaceChildren();
-        for (const [build, store] of Object.entries(stores)) {
-          const button = document.querySelector(`[data-get="${build}"]`);
-          if (store.live) {
-            button.dataset.zip ??= button.href;
-            button.href = store.url;
-            button.querySelector('[data-verb]').textContent = 'Add to';
-          } else if (button.dataset.zip) {
-            button.href = button.dataset.zip;
-            button.querySelector('[data-verb]').textContent = 'Download for';
-          }
-          document.querySelector(`[data-steps="${build}"]`).hidden = store.live === true;
-          if (store.live === null) continue;
-          const item = document.createElement(store.live ? 'a' : 'span');
-          item.className = 'store';
-          item.dataset.state = store.live ? 'live' : 'soon';
-          if (store.live) item.href = store.url;
-          item.textContent = `${store.name}: `;
-          const state = document.createElement('b');
-          state.textContent = store.live ? (store.version ? `live, v${store.version}` : 'live') : 'coming soon';
-          item.append(state);
-          line.append(item);
-        }
-        line.hidden = !line.childElementCount;
-        const anyZip = Object.values(stores).some((store) => store.live !== true);
-        document.getElementById('install').hidden = !anyZip;
-        document.querySelector('[data-install-link]').hidden = !anyZip;
-      }
-      showStores();
-
       document.querySelectorAll('[data-get]').forEach((button) => {
         button.addEventListener('click', () => {
           const build = button.dataset.get;
-          track('download_clicked', {
-            build,
-            via: stores?.[build]?.live ? 'store' : 'zip',
-            suggested: build === browser?.build,
-          });
+          track('download_clicked', { build, via: 'store', suggested: build === browser?.build });
         });
       });
       document.querySelectorAll('#faq details').forEach((row) => {
@@ -391,19 +324,6 @@
           if (row.open) track('faq_opened', { question: row.querySelector('summary').textContent.trim() });
         });
       });
-
-      if (stores?.firefox && !stores.firefox.live) {
-        fetch('https://addons.mozilla.org/api/v5/addons/addon/newtab-mii-plaza/')
-          .then(async (res) => {
-            if (res.status === 401 || res.status === 404) return;
-            const data = await res.json();
-            if (data.status === 'public' && !data.is_disabled) {
-              stores.firefox = { ...stores.firefox, live: true, version: data.current_version?.version };
-              showStores();
-            }
-          })
-          .catch(() => {});
-      }
     </script>
   </body>
 </html>

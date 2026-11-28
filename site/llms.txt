@@ -19,7 +19,7 @@
 ## Install
 
 - Chrome, Edge, Brave, Opera, Vivaldi: add it from the Chrome Web Store at https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk
-- Firefox 140 or newer: download the Firefox zip and use Load Temporary Add-on in about:debugging#/runtime/this-firefox. Firefox removes it on restart until the add-on is listed on Firefox Add-ons.
+- Firefox 140 or newer: add it from Firefox Add-ons at https://addons.mozilla.org/firefox/addon/newtab-mii-plaza/
 - Safari and phones are not supported.
 
 ## Privacy
