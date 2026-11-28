@@ -278,6 +278,7 @@
       </p>
     </footer>
 
+    <script src="analytics.js"></script>
     <!-- stores -->
     <script>
       const stage = document.querySelector('[data-shot-stage]');
@@ -296,7 +297,10 @@
       themeButtons.forEach((btn) => {
         btn.addEventListener('click', () => {
           const next = btn.dataset.shotTheme;
-          if (next === 'light' || next === 'dark') applyShotTheme(next);
+          if (next === 'light' || next === 'dark') {
+            applyShotTheme(next);
+            track('screenshot_theme', { mode: next });
+          }
         });
       });
 
@@ -371,6 +375,22 @@
         document.querySelector('[data-install-link]').hidden = !anyZip;
       }
       showStores();
+
+      document.querySelectorAll('[data-get]').forEach((button) => {
+        button.addEventListener('click', () => {
+          const build = button.dataset.get;
+          track('download_clicked', {
+            build,
+            via: stores?.[build]?.live ? 'store' : 'zip',
+            suggested: build === browser?.build,
+          });
+        });
+      });
+      document.querySelectorAll('#faq details').forEach((row) => {
+        row.addEventListener('toggle', () => {
+          if (row.open) track('faq_opened', { question: row.querySelector('summary').textContent.trim() });
+        });
+      });
 
       if (stores?.firefox && !stores.firefox.live) {
         fetch('https://addons.mozilla.org/api/v5/addons/addon/newtab-mii-plaza/')

@@ -28,6 +28,10 @@ New Tab Mii Plaza does not collect, transmit, sell, or share personal informatio
 - `favicon` (Chrome only): Fallback to Chrome's local favicon cache when offline.
 - `host_permissions` (`http://*/*`, `https://*/*`): Allow direct automatic fetching of page titles, theme colors, and favicons from sites you pin without contacting third-party icon servers, and reading announcements from ankush.one.
 
+## The project page
+
+This applies to the extension only. Its web page at `ankush.one/newtab-mii-plaza` uses PostHog analytics like the rest of ankush.one, described with a button to turn them off on the [ankush.one privacy page](https://ankush.one/privacy/). The extension never loads or talks to PostHog.
+
 ## Contact
 
 If you have questions about this privacy policy, email [miiplaza@ankush.one](mailto:miiplaza@ankush.one).
