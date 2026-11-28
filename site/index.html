@@ -107,6 +107,7 @@
     <header class="site-head">
       <a class="brand" href="#top">New Tab Mii Plaza</a>
       <nav class="head-links" aria-label="Primary">
+        <a href="#install">Install</a>
         <a href="#faq">FAQ</a>
         <a href="https://discord.gg/2zzuECtPV3" target="_blank" rel="noopener noreferrer" aria-label="Discord">
           <span class="mark mark-discord" aria-hidden="true"><svg class="icon"><use href="#i-discord" /></svg></span>
@@ -143,7 +144,6 @@
             <span>Add to Firefox</span>
           </a>
         </div>
-        <!-- versions -->
       </section>
 
       <figure class="shot-wrap">
@@ -191,6 +191,83 @@
           <h2>Out of your way</h2>
           <p>No account, no ads and no tracking. Pins sync through your browser's own account, and the plaza stops drawing when you aren't using it.</p>
         </div>
+      </section>
+
+      <section class="install" id="install" aria-labelledby="install-heading">
+        <h2 id="install-heading">Install</h2>
+        <ul class="browsers">
+          <li>
+            <a class="browser" data-browser="chrome" data-get="chrome" href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk" title="Chrome Web Store">
+              <svg class="bi" aria-hidden="true"><use href="#bi-chrome" /></svg>
+              <b>Chrome</b>
+              <span data-version="chrome">Chrome Web Store</span>
+            </a>
+          </li>
+          <li>
+            <a class="browser" data-browser="firefox" data-get="firefox" href="https://addons.mozilla.org/firefox/addon/newtab-mii-plaza/" title="Firefox Add-ons">
+              <svg class="bi" aria-hidden="true"><use href="#bi-firefox" /></svg>
+              <b>Firefox</b>
+              <span data-version="firefox">Firefox Add-ons</span>
+            </a>
+          </li>
+          <li>
+            <a class="browser" data-browser="edge" data-get="chrome" href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk" title="Chrome Web Store">
+              <svg class="bi" aria-hidden="true"><use href="#bi-edge" /></svg>
+              <b>Edge</b>
+              <span data-version="chrome">Chrome Web Store</span>
+            </a>
+          </li>
+          <li>
+            <a class="browser" data-browser="brave" data-get="chrome" href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk" title="Chrome Web Store">
+              <svg class="bi" aria-hidden="true"><use href="#bi-brave" /></svg>
+              <b>Brave</b>
+              <span data-version="chrome">Chrome Web Store</span>
+            </a>
+          </li>
+          <li>
+            <a class="browser" data-browser="opera" data-get="chrome" href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk" title="Chrome Web Store">
+              <svg class="bi" aria-hidden="true"><use href="#bi-opera" /></svg>
+              <b>Opera</b>
+              <span data-version="chrome">Chrome Web Store</span>
+            </a>
+          </li>
+          <li>
+            <a class="browser" data-browser="vivaldi" data-get="chrome" href="https://chromewebstore.google.com/detail/iomoadjdgikohalaohjpabppalbomibk" title="Chrome Web Store">
+              <svg class="bi" aria-hidden="true"><use href="#bi-vivaldi" /></svg>
+              <b>Vivaldi</b>
+              <span data-version="chrome">Chrome Web Store</span>
+            </a>
+          </li>
+        </ul>
+
+        <details class="manual">
+          <summary>
+            <span>Install from a zip</span>
+            <span class="release">
+              <svg class="icon" aria-hidden="true"><use href="#i-github" /></svg>
+              <b data-version="github">GitHub</b>
+              <span class="flag" data-newer hidden>Newer</span>
+            </span>
+          </summary>
+          <div class="manual-cols">
+            <div>
+              <h3><svg class="bi" aria-hidden="true"><use href="#bi-chrome" /></svg>Chrome, Edge, Brave, Opera, Vivaldi</h3>
+              <ol>
+                <li><a data-get="chrome" data-via="zip" href="https://github.com/ankushKun/newtab-mii-plaza/releases/latest/download/newtab-mii-plaza-chrome.zip">Download the zip</a> and unzip it.</li>
+                <li>Open <code>chrome://extensions</code> and turn on Developer mode.</li>
+                <li>Click Load unpacked and pick the folder.</li>
+              </ol>
+            </div>
+            <div>
+              <h3><svg class="bi" aria-hidden="true"><use href="#bi-firefox" /></svg>Firefox</h3>
+              <ol>
+                <li><a data-get="firefox" data-via="zip" href="https://github.com/ankushKun/newtab-mii-plaza/releases/latest/download/newtab-mii-plaza-firefox.zip">Download the zip</a>.</li>
+                <li>Open <code>about:debugging#/runtime/this-firefox</code>.</li>
+                <li>Click Load Temporary Add-on and pick the zip. It lasts until Firefox restarts.</li>
+              </ol>
+            </div>
+          </div>
+        </details>
       </section>
 
       <section class="faq" id="faq" aria-labelledby="faq-heading">
@@ -299,8 +376,12 @@
       }
       if (browser) {
         document.documentElement.dataset.browser = browser.build;
-        const mine = document.querySelector(`[data-get="${browser.build}"]`);
-        const other = document.querySelector(`[data-get]:not([data-get="${browser.build}"])`);
+        const card =
+          document.querySelector(`.browser[data-browser="${browser.icon ?? browser.build}"]`) ??
+          document.querySelector(`.browser[data-browser="${browser.build}"]`);
+        card?.classList.add('is-you');
+        const mine = document.querySelector(`.actions [data-get="${browser.build}"]`);
+        const other = document.querySelector(`.actions [data-get]:not([data-get="${browser.build}"])`);
         if (mine && other) {
           mine.classList.add('btn-primary');
           other.classList.remove('btn-primary');
@@ -316,7 +397,7 @@
       document.querySelectorAll('[data-get]').forEach((button) => {
         button.addEventListener('click', () => {
           const build = button.dataset.get;
-          track('download_clicked', { build, via: 'store', suggested: build === browser?.build });
+          track('download_clicked', { build, via: button.dataset.via ?? 'store', suggested: build === browser?.build });
         });
       });
       document.querySelectorAll('#faq details').forEach((row) => {

@@ -2,8 +2,8 @@
 // https://ankush.one/newtab-mii-plaza/. site/index.html is the home page, site/support.html becomes /support/, and
 // PRIVACY.md is rendered into site/privacy.html as /privacy/, so the stores' privacy link always matches the repo.
 // The questions on the home page are the one source for its FAQPage structured data and for llms-full.txt.
-// Each build also writes the latest version on each store and on GitHub under the buttons (the Pages workflow reruns
-// every few hours, since store reviews land on their own schedule).
+// Each build also writes the latest version on each store and on GitHub into the Install section, and flags the GitHub
+// release when it's ahead of a store (the Pages workflow reruns every few hours, since store reviews take their time).
 import { copyFile, cp, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { marked } from 'marked';
 
@@ -13,7 +13,7 @@ const CHROME_ID = 'iomoadjdgikohalaohjpabppalbomibk';
 const AMO_SLUG = 'newtab-mii-plaza';
 const REPO = 'ankushKun/newtab-mii-plaza';
 
-/** The latest version on each store and on GitHub, skipping any that couldn't be asked. */
+/** The latest version on each store and on GitHub, undefined for any that couldn't be asked. */
 async function latestVersions() {
   const ask = async (url, read, headers = {}) => {
     try {
@@ -24,7 +24,7 @@ async function latestVersions() {
     }
   };
   const github = process.env.GITHUB_TOKEN ? { authorization: `Bearer ${process.env.GITHUB_TOKEN}` } : {};
-  const versions = await Promise.all([
+  const [chrome, firefox, release] = await Promise.all([
     // Chrome's own update check.
     ask(
       `https://clients2.google.com/service/update2/crx?response=updatecheck&acceptformat=crx2,crx3&prodversion=140.0&x=id%3D${CHROME_ID}%26uc`,
@@ -33,13 +33,16 @@ async function latestVersions() {
     ask(`https://addons.mozilla.org/api/v5/addons/addon/${AMO_SLUG}/`, async (res) => (await res.json()).current_version?.version),
     ask(`https://api.github.com/repos/${REPO}/releases/latest`, async (res) => (await res.json()).tag_name?.replace(/^v/, ''), github),
   ]);
-  return [
-    { name: 'Chrome Web Store', url: `https://chromewebstore.google.com/detail/${CHROME_ID}` },
-    { name: 'Firefox Add-ons', url: `https://addons.mozilla.org/firefox/addon/${AMO_SLUG}/` },
-    { name: 'GitHub', url: `https://github.com/${REPO}/releases/latest` },
-  ]
-    .map((source, i) => ({ ...source, version: versions[i] }))
-    .filter((source) => source.version);
+  return { chrome, firefox, github: release };
+}
+
+/** Whether version a is newer than b. */
+function newer(a, b) {
+  const [x, y] = [a, b].map((v) => v.split('.').map(Number));
+  for (let i = 0; i < Math.max(x.length, y.length); i++) {
+    if ((x[i] ?? 0) !== (y[i] ?? 0)) return (x[i] ?? 0) > (y[i] ?? 0);
+  }
+  return false;
 }
 
 await rm(OUT, { recursive: true, force: true });
@@ -65,12 +68,14 @@ const faqLd = {
   mainEntity: faq.map(({ q, a }) => ({ '@type': 'Question', name: q, acceptedAnswer: { '@type': 'Answer', text: a } })),
 };
 const versions = await latestVersions();
-console.log('Versions:', versions.map((v) => `${v.name} ${v.version}`).join(', ') || 'none');
-if (!home.includes('<!-- versions -->')) throw new Error('site/index.html lost its <!-- versions --> marker');
-const versionLine = versions.length
-  ? `<p class="versions">${versions.map((v) => `<a href="${v.url}">${v.name} <b>v${v.version}</b></a>`).join('')}</p>`
-  : '';
-const page = home.replace('<!-- versions -->', versionLine);
+console.log('Versions:', Object.entries(versions).map(([k, v]) => `${k} ${v ?? 'unknown'}`).join(', '));
+// Each <tag data-version="chrome|firefox|github">fallback</tag> gets the version, and the GitHub release is flagged
+// when a store hasn't caught up with it yet.
+let page = home.replace(/(<(\w+) data-version="(\w+)"[^>]*>)[^<]*(<\/\2>)/g, (whole, open, _tag, key, close) =>
+  versions[key] ? `${open}v${versions[key]}${close}` : whole,
+);
+const behind = [versions.chrome, versions.firefox].some((v) => v && versions.github && newer(versions.github, v));
+if (behind) page = page.replace('data-newer hidden', 'data-newer');
 const faqScript = `    <script type="application/ld+json">${JSON.stringify(faqLd)}</script>\n  </head>`;
 await writeFile(`${OUT}/index.html`, page.replace('  </head>', faqScript));
 
